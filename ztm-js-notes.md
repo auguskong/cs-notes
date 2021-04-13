@@ -288,5 +288,176 @@ template ?
 
  
 
+## Drag & Drop
 
 
+
+### 知识点
+
+* LocalStorage
+
+  ```javascript
+  // get the element and index
+  arrayNames.forEach((arrayName, index) => {
+  });
+  ```
+
+  
+
+* Update DOM
+
+  ```javascript
+  backlogList.textContent // update the unordered list content
+  ```
+
+  
+
+* [HTML Drag & Drop API](https://www.w3schools.com/html/html5_draganddrop.asp)
+
+  * draggable
+  * drag event, drag function  ondragstart
+  * 在HTML中也需要添加eventListener
+
+
+
+ondrop
+
+ondragover
+
+ondragenter: 进入了某一个特定区域就可以进行处理了 
+
+
+
+高亮显示颜色是通过 CSS `.over` class来控制的
+
+显示和取消是分成了两个步骤的 先add class 然后 remove class 
+
+更新HTML element之后还需要更新loca Storage 当中的数据
+
+
+
+
+
+
+
+
+
+### Q & A
+
+```
+'' vs. `` ?
+```
+
+
+
+
+
+### 快捷键
+
+* Vim
+  * `nyy`: 复制接下来的n行
+  * `:5,10s/foo/bar/g`: Change each `foo` to `bar` for all lines from line 5 to line 12 (inclusive). more search and replace commands: https://vim.fandom.com/wiki/Search_and_replace
+  * `:g/foo/d`: delete all lines that contain a particular pattern https://vim.fandom.com/wiki/Delete_all_lines_containing_a_pattern
+
+
+
+
+
+
+
+### Debug
+
+定义的div有两个class的话 会用哪一个 会重叠? 
+
+createItemEl() 中的column param是干啥的? 
+
+```
+Uncaught SyntaxError: Unexpected token u in JSON at position 0
+```
+
+是因为是空数组? 
+
+
+
+`JSON.parse(undefined)` 会报错
+
+progress 写成了 proress 少了个g 结果就没有办法找到对应的token了
+
+
+
+
+
+为什么我的object 变成空的了? 
+
+![image-20210411150149987](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210411150149987.png)
+
+
+
+Array数组中的data type不一致 导致更新失败了 数组中存的应该是string type 但是我直接更新成了 List.children[i] 就变成了object 然后`createItemEl()` 中使用`listEl.textContent = item;` 赋值时出错了
+
+
+
+可以改进的地方 
+
+* background color 没有进行实时的更新 会有三种颜色
+* 如果item 没有添加到column当中可能background color就不会消失了![image-20210411201406744](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210411201406744.png)
+
+
+
+
+
+## Splash Page 
+
+
+
+### 知识点
+
+* Figma 基本使用
+
+  * Figma 是给Designer用的 可以创建mockup 和 prototype  image/icon/ 
+  * 分层概念
+
+* 图片资源管理
+
+  * Splash Page Figma https://www.figma.com/file/4KIM14zOqqIKRuF8kBtHGs/Showcase-Website?node-id=1%3A2
+
+  * 位置是Designer帮忙调整好了的 但是不能完全照抄 需要根据特定情况修改
+
+    * ![image-20210408202145273](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210408202145273.png)
+
+      比如这里就存在了只显示半页的图片 高度需要减半
+
+  * 处理图片大小不匹配的问题 修改内部的`img` element
+
+  * 更改背景板颜色 切换过去 并且切换回来
+
+外部资源
+
+* [Figma 官方文档](https://www.figma.com/best-practices/tips-on-developer-handoff/an-overview-of-figma-for-developers/) 
+* 背景图画 https://www.heropatterns.com/
+* 渐变背景图: https://uigradients.com/#EasyMed
+
+
+
+### 心得
+
+* 各种Element的嵌套本质上就是在进行分层
+* 前端的确存在着大量的copy&paste低效的重复劳动 包括样式 定义各种div 找资源的link 
+* 需要展示想法也是必不可少的
+
+
+
+Q&A
+
+* 为什么要对于App Store button 单独写一个div来包起来呢? 
+* `const { body } = document;` 这是个什么写法? 
+
+
+
+
+
+## 进阶知识点
+
+Fix memory problems: https://developer.chrome.com/docs/devtools/memory-problems/
+
+Record heap snapshots: https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots/ 
