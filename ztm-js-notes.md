@@ -336,16 +336,55 @@ ondragenter: 进入了某一个特定区域就可以进行处理了
 
 
 
+HTML onclick attribute
+
+contenteditable
+
+
+
+为什么input field 没有在Save Item 之后hide ? 
 
 
 
 
 
+inputItem 没有在被Save 之后及时隐藏起来? 为什么呢? 
+
+
+
+```javascript
+onclick="showInputBox()" 加错位置了 加在了add-btn-group中 和hideInputBox() 冲突了 不知道应该show 还是hide最后就超时了 
+```
+
+
+
+
+
+
+
+focusout event
+
+
+
+focusin event
+
+
+
+drag 和 edit content 发生了冲突 
+
+```
+
+```
+
+
+
+![image-20210413215149595](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210413215149595.png)
 
 ### Q & A
 
 ```
-'' vs. `` ?
+JS 中 '' vs. `` 区别? 
+`` 表示的是template ? 
 ```
 
 
@@ -358,6 +397,8 @@ ondragenter: 进入了某一个特定区域就可以进行处理了
   * `nyy`: 复制接下来的n行
   * `:5,10s/foo/bar/g`: Change each `foo` to `bar` for all lines from line 5 to line 12 (inclusive). more search and replace commands: https://vim.fandom.com/wiki/Search_and_replace
   * `:g/foo/d`: delete all lines that contain a particular pattern https://vim.fandom.com/wiki/Delete_all_lines_containing_a_pattern
+  * `d1/>`: delete from the cursor to the 1th occurence of `>` 快速删除某一部分
+  * `.`: repeat last norma command
 
 
 
