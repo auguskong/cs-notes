@@ -495,6 +495,40 @@ Q&A
 
 
 
+## Video Player
+
+
+
+### 知识点
+
+* HTML
+  * `<video>`
+* CSS
+  * @media 放在文件靠后的位置可以覆盖前面的attribute
+
+*
+
+### 心得
+
+
+
+### 资源链接
+
+* Font Awesome: 各种icon https://www.udemy.com/course/javascript-web-projects-to-build-your-portfolio-resume/learn/lecture/20893712#notes
+* 
+
+
+
+### 快捷键
+
+* Vim快捷键
+  * `y t space`:复制当前行到下一个空格之前
+  * paste location 是和copy的方式有关的 https://stackoverflow.com/a/9383985
+  * `t`: till next character
+  * 
+
+### Q&A
+
 
 
 ## 进阶知识点
