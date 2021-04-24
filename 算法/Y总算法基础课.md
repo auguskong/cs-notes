@@ -46,6 +46,7 @@
     
     int main()
     {
+      	// 直接用scanf 来读数据 不需要进行n = 赋值操作
         scanf("%d", &n);
         for (int i = 0; i < n; i++) scanf("%d", &q[i]);
         
@@ -78,6 +79,7 @@
     int n;
     int q[N], tmp[N];
     
+    // 数组定义是 q[] 
     void merge_sort(int q[], int l, int r)
     {
         if (l >= r) return;
@@ -90,8 +92,10 @@
       	// 当两个指针都没有走到小区间的终点
         while (i <= mid && j <= r) {
             if (q[i] <= q[j]) {
+                // 这里需要对i进行++操作 赋值之后右移
                 tmp[k++] = q[i++];
             } else {
+              	// j赋值之后右移
                 tmp[k++] = q[j++];
             }
         }
@@ -100,10 +104,13 @@
         while (j <= r) tmp[k++] = q[j++];
         
       	// 将数字从tmp中放回到原来的数组中
+      
+      	// 为什么这里i是从l开始 而j是从0开始的?  因为tmp在每一次递归都是从0开始进行赋值,而我们的q数组在不同的递归方法之间是共享的
         for (i = l, j = 0; i <= r; i++, j++) q[i] = tmp[j];
     }
     
     int main() {
+        // 先读入输入的数据个数
         scanf("%d", &n);
         for (int i = 0; i < n; i++) {
             scanf("%d", &q[i]);

@@ -502,13 +502,27 @@ Q&A
 ### 知识点
 
 * HTML
-  * `<video>`
+  * `<video>`: insert video file
+  * `<select>`: 下拉窗口 speed button
 * CSS
   * @media 放在文件靠后的位置可以覆盖前面的attribute
 
 *
 
 ### 心得
+
+![image-20210422223827877](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210422223827877.png)
+
+
+
+通过修改CSS来对视频下方的控制栏进行修改
+
+```css
+opacity: 
+transition: all 0.5s ease-out 
+```
+
+
 
 
 
@@ -517,7 +531,7 @@ Q&A
 * Font Awesome: 各种icon https://www.udemy.com/course/javascript-web-projects-to-build-your-portfolio-resume/learn/lecture/20893712#notes
 * 
 
-
+!(/Users/xiangyu/Library/Application Support/typora-user-images/image-20210422223735740.png)
 
 ### 快捷键
 
