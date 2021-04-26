@@ -506,6 +506,8 @@ Q&A
   * `<select>`: 下拉窗口 speed button
 * CSS
   * @media 放在文件靠后的位置可以覆盖前面的attribute
+  * `calc()`: CSS function lets you perform calculations when specifiying CSS property values
+  * 
 
 *
 
@@ -515,14 +517,55 @@ Q&A
 
 
 
+
+
+这里是格式错误是由于没有将div play 和 volume添加到 left control div当中
+
 通过修改CSS来对视频下方的控制栏进行修改
 
 ```css
 opacity: 
 transition: all 0.5s ease-out 
+cursor: pointer ?   
 ```
 
 
+
+如何进行动态调整progress bar ? hover之后会有width的变化 
+
+拖拽的位置会影响整个video的进度条 需要进行计算
+
+CSS 当中querySelector的点是干嘛用的 选择的是class本身? 
+
+
+
+可以直接check HTML`<video>` element 的各种性质 https://www.w3schools.com/tags/ref_av_dom.asp
+
+
+
+使用play() method来播放video, pause() method来暂停video 
+
+`paused`: returns whether the audio/video is paused or not G 
+
+
+
+hover动画
+
+
+
+使用
+
+
+
+cursor: pointer 是
+
+
+
+使用ternary operator 来代替if / else statement
+
+
+
+通过给video.currentTime 变量赋值来改变视频的播放时间点
 
 
 
@@ -540,6 +583,18 @@ transition: all 0.5s ease-out
   * paste location 是和copy的方式有关的 https://stackoverflow.com/a/9383985
   * `t`: till next character
   * 
+
+直接check browser feature 
+
+而不是check user agent value  
+
+
+
+更加future proof 不会轻易改动
+
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent
+
+https://security.stackexchange.com/questions/126407/why-does-chrome-send-four-browsers-in-the-user-agent-header
 
 ### Q&A
 
