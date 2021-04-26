@@ -48,15 +48,11 @@ Attack Lab:
 
 
 
-
-
 ## Chapter 1 A Tour of Computer Systems
 
 
 
 ### 核心概念
-
-
 
 * Information is Bits + Context
 
@@ -66,7 +62,7 @@ Attack Lab:
 
     > The only thing that distinguishes different data objects is the context in which we view them. For example, in different contexts, the same sequence of bytes might represent an integer, floating-point number, character string, or machine instruction.
 
-* 一个简单的``hello.c` 编译全流程
+* 一个简单的`hello.c` 编译全流程
 
   * Preprocessing 预编译 .c -> .i  处理`#` include语句 纯文本替换 生成新的.i文件 还是**c代码(c program)**
 
