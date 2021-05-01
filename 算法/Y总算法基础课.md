@@ -1,3 +1,15 @@
+
+
+主要思想
+
+背下来: 能够快速写出来然后调试通过
+
+
+
+提高熟练度的方法: 写完一遍调试了之后 删除 在重新写一遍 重复3-5遍
+
+
+
 ## 基础算法(一)
 
 
@@ -124,33 +136,104 @@
     }
     ```
 
-    
-
-
-
-主要思想
-
-背下来: 能够快速写出来然后调试通过
-
-
-
-提高熟练度的方法
-
-
-
-写完一遍调试了之后 删除 在重新写一遍 重复3-5遍
-
-
-
-
-
-
 
 
 
 ### 二分
 
 
+
+```c++
+
+// 二分模板
+bool check(int x) {
+  
+}
+
+用来找右边区间的最左边的端点 mid不需要使用 + 1
+区间被划分成[l, mid] 和 [mid + 1, r]
+int bsearch_1(int l, int r) {
+  while (l < r) {
+    int mid = l + r >> 1;
+    if (check(mid)) r = mid;
+    else l = mid + 1;
+  }
+  return l;
+}
+
+用来找到左边区间的最右边的端点 mid需要 + 1
+区间被划分成[l, mid - 1] 和 [mid, r]
+int bsearch_2(int l, int r) {
+  while (l < r) {
+    int mid = l + r + 1 >> 1;
+    if (check(mid)) l = mid;
+    else r = mid - 1;
+  }
+  return l;
+}
+```
+
+
+
+
+
+* 例题: 数的范围 https://www.acwing.com/problem/content/791/
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+int n, m, x;
+int q[N];
+
+int main() {
+    scanf("%d%d", &n, &m);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &q[i]);
+    }
+    
+    while (m-- > 0) {
+        int l = 0, r = n - 1;
+        scanf("%d", &x);
+        while (l < r) {
+            int mid = l + r >> 1;
+            if (q[mid] >= x) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        
+      // 如果没有找到当前元素 直接返回 -1 -1即可
+        if (q[l] != x) {
+            cout << "-1 -1" << endl;
+        }
+        else {
+          
+          // 这里打印的是第一个位置 先不换行
+            cout << l << ' ';
+    
+            int l = 0, r = n - 1;
+            while (l < r) {
+              // 找右端点的时候需要进行+1操作
+                int mid = l + r + 1 >>1;
+                if (q[mid] <= x) {
+                    l = mid;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            
+          // 这里打印的是第二个位置 l已经被更新过了
+            cout << l << endl;
+        }
+    }
+    
+    return 0;
+}
+```
 
 
 
@@ -186,7 +269,7 @@ a_{i} = b_{1} + b_{2} + \dots + b_{i}
 
 \```
 
-![0aec1f0f94d190855e9c23f876b0d707.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p87)
+
 
 差分的作用: 通过修改b数组来快速处理操作对于a数组中的给定区间[l, r]的所有数字都要加上c的操作。
 
@@ -330,16 +413,6 @@ return count;
 
 \```
 
-LeetCode 打卡
 
-LeetCode 提高班 Week1 - 模拟专题 + 背包问题
-
-https://www.bilibili.com/video/av34467850
-
-2019 暑期
-
-Week2 链表
-
-https://www.bilibili.com/video/av60198891
 
 Week7 基本数据结构
