@@ -100,3 +100,25 @@ Attack Lab:
   * Concurrency: general concept of a system with multiple, simultaneous activities
   * Parallelism: the use of concurrency to make a system run faster
 
+
+
+
+
+## Chapter 2 Representing and Manipulating Information
+
+
+
+
+
+### Information Storage
+
+`!` 是逻辑运算, 将True变为False
+
+`~` 是取非位运算 将每一个bit上的1变为0, 0变为1 True取非还是True  只要不是0x0 都是True
+
+### Integer Representation
+
+### Integer Arithmetic
+
+### Floating Point
+

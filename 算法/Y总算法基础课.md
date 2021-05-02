@@ -44,7 +44,8 @@
         int x = q[(l + r) >> 1], i = l - 1, j = r + 1;
         while (i < j)
         {
-          	// 如果i都是小于x的话 符合条件 向右移动
+          	// 如果i都是小于x的话 符合条件 向右移动 
+            // 指针移动的条件是 < x 不能是 <=x 会死循环
             do i ++; while (q[i] < x);
           	// 如果j指向的数字都是大于x的话 符合条件 向左移动
             do j --; while (q[j] > x);
@@ -70,7 +71,7 @@
     }
     
     ```
-
+    
     
 
 * 归并
@@ -100,6 +101,7 @@
         
         merge_sort(q, l, mid), merge_sort(q, mid + 1, r);
         
+      	// 注意这里的i 是从l开始的 只是数组区间上的某一段起点 不能从0开始
         int k = 0, i = l, j = mid + 1;
       	// 当两个指针都没有走到小区间的终点
         while (i <= mid && j <= r) {
@@ -135,7 +137,7 @@
         return 0;
     }
     ```
-
+    
 
 
 
@@ -239,9 +241,13 @@ int main() {
 
 
 
-\## 基础算法(二) - [Video](https://www.acwing.com/video/11/)
+## 基础算法(二) - [Video](https://www.acwing.com/video/11/)
 
-前缀和和差分 (1:50:30)
+
+
+### 前缀和和差分 
+
+
 
 举例子:
 
