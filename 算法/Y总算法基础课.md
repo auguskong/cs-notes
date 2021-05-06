@@ -384,6 +384,119 @@ b_{l} + c \to a_{l} + c, a_{l + 1} + c \dots a_{n} + c
 
 需要在`$b_{l} + c$`的同时进行`$b_{r + 1} - c` 来终止加c的效果,注意检查越界
 
+
+
+
+
+### 双指针算法
+
+
+
+#### 基本模板
+
+```c++
+for (int i = 0, j = 0; i < n; i++) {
+  while (j < i && check(i, j)) {
+    j++;
+  }
+  
+  // 题目的具体逻辑
+}
+```
+
+
+
+#### 最长连续不重复子序列
+
+```c++
+
+// 我的实现
+#include <iostream>
+
+using namespace std;
+
+const int N = 100010;
+
+int n;
+
+int q[N], s[N];
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &q[i]);
+    }
+    
+    int r = 0;
+    // 输入的是有序的吗? 不一定
+    // 开一个数组 因为这里有前提条件是所有的输入数字都在[0, 10000]的区间内 存一下当前已经走过的元素 出现次数加1
+    for (int i = 0, j = 0; i < n; i++) {
+        while (j < n && s[q[j]] == 0) {
+            // 这里注意操作顺序是先计数 出现次数+1 然后进行比较 再将指针右移
+            s[q[j]]++;
+            r = max(j - i + 1, r);
+            j++;
+        }
+        s[q[i]]--;
+    }
+    
+    printf("%d", r);
+}
+```
+
+
+
+
+
+#### 数组元素的目标和
+
+```c++
+#include<iostream>
+
+using namespace std;
+
+const int N = 100010;
+
+int n, m, x;
+
+int a[N], b[N];
+
+int main () {
+    scanf("%d%d%d", &n, &m, &x);
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+    }
+    
+    for (int i = 0; i < m; i++) {
+        scanf("%d", &b[i]);
+    }
+    
+    for (int i = 0, j = m - 1; i < n; i++) {
+        while (j > 0 && a[i] + b[j] > x) {
+            j--;
+        }
+        if (a[i] + b[j] == x) {
+            printf("%d %d", i, j);
+            break;
+        }
+    }
+    
+    return 0;
+}
+```
+
+
+
+### 位运算
+
+
+
+最常用的两个基本操作
+
+
+
+
+
 例题:
 
 [Corporate Flight Bookings](https://leetcode.com/problems/corporate-flight-bookings)
