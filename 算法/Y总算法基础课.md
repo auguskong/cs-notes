@@ -581,52 +581,146 @@ break;
 
 调和级数 和为 `$\ln{n}$`
 
-\```math
+
+
+```
+```
+
+
 
 1 + \frac{1}{2} + \frac{1}{3} + \dots + \frac{1}{n}
 
-\```
 
-\```java
+
+```java
+```
+
+
 
 class Solution {
 
-public int countPrimes(int n) {
-
-boolean[] notPrime = new boolean[n + 1];
-
-if (n <= 1) {
-
-return 0;
+​	https://www.bilibili.com/video/BV1iW411d7hd?p=5
 
 }
 
-int count = 0;
 
-for (int i = 2; i < n; i++) {
-
-if (!notPrime[i]) {
-
-count++;
-
-}
-
-for (int j = i; j <= n / i; j++) {
-
-notPrime[j * i] = true;
-
-}
-
-}
-
-return count;
-
-}
-
-}
 
 \```
 
 
 
 Week7 基本数据结构
+
+
+
+## 动态规划(一)
+
+
+
+### 背包问题
+
+
+
+#### 0/1 背包
+
+
+
+i不是第i件  而是前i件
+
+
+
+```c++
+// 朴素版 二维
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1010;
+
+int n, m;
+int v[N], w[N];
+int f[N][N];
+
+int main() {
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n; i++) cin >> v[i] >> w[i];
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            f[i][j] = f[i - 1][j];
+            if (j >= v[i]) {
+                f[i][j] = max(f[i - 1][j], f[i - 1][j - v[i]] + w[i]);
+            }
+        }
+    }
+    
+    cout << f[n][m] << endl;
+    
+    return 0;
+}
+
+// 一维数组只存体积就可以
+#include <iostream>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 1010;
+
+int n, m;
+int v[N], w[N];
+int f[N];
+
+int main() {
+    cin >> n >> m;
+    
+    for (int i = 1; i <= n; i++) cin >> v[i] >> w[i];
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = m; j >= v[i]; j--) {
+            f[j] = max(f[j], f[j - v[i]] + w[i]);
+        }
+    }
+    
+    cout << f[m] << endl;
+    
+    return 0;
+}
+
+a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
+   18 |             f[j] = max(f[j], f[j - v[i]] + w[i]);
+
+记得要把二维数组的定义改成一维的 不然会有报错
+```
+
+
+
+
+
+### 线性DP
+
+
+
+### 区间DP
+
+
+
+### 计数类DP
+
+
+
+### 数位统计DP
+
+
+
+### 状态压缩DP
+
+
+
+### 树形DP
+
+
+
+### 记忆化搜索
