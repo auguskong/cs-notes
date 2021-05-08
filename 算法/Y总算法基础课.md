@@ -703,7 +703,140 @@ a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
 
 
 
+按照一种线性关系来进行递推
+
+
+
+#### 数字三角形
+
+题目: https://www.acwing.com/problem/content/900/
+
+
+
+```c++
+// 我的实现
+
+基本思路: 
+1. 从最下层的数字向上走 (这样最后只需要返回f[1][1]即可)
+  1. 最下层的元素直接复制原数组最下层
+  2. 非最下层的其他元素f[i][j]只能有两个选项 f[i + 1][j] 同列 f[i + 1][j] 靠右的一列
+2. f[i][j] 表示的是从最底层走到当前位置的
+  
+#include <iostream>
+using namespace std;
+
+const int N = 510;
+int n;
+int f[N][N], q[N][N];
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            scanf("%d", &q[i][j]);
+        }
+    }
+    
+    for (int i = 1; i <= n; i++) {
+        f[n][i] = q[n][i];
+    }
+    for (int i = n - 1; i >= 1; i--) {
+        for (int j = 1; j <= i; j++) {
+            f[i][j] = max(f[i + 1][j], f[i + 1][j + 1]) + q[i][j];
+        }
+    }
+    printf("%d", f[1][1]);
+    return 0;
+}
+
+```
+
+
+
+#### 最长上升子序列
+
+题目: https://www.acwing.com/problem/content/897/
+
+
+
+```c++
+// 我的实现
+
+基本思路: 
+1. f[i] 表示以第i个数字结尾的最长递增子序列
+2. 从前向后依次遍历每个数字 重新检查当前位置之前的所有元素 如果有更长的上升序列就比较并更新 f[i] 和 max, 没有就保留原来的最长序列 
+3. 
+
+#include <iostream>
+using namespace std;
+
+const int N = 1010;
+int n;
+int q[N], f[N];
+
+int main() {
+    int res = 0;
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        scanf("%d", &q[i]);
+    }
+    
+    for (int i = 1; i <= n; i++) {
+        f[i] = 1;
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            if (q[i] > q[j]) {
+                f[i] = max(f[i], f[j] + 1);
+                res = max(f[i], res);
+            }
+        }
+    }
+    
+    printf("%d", res);
+}
+```
+
+
+
+
+
+最长公共子序列
+
+
+
+动态规划(二)视频: https://www.acwing.com/video/35/
+
+
+
 ### 区间DP
+
+
+
+#### 石子合并
+
+题目: https://www.acwing.com/problem/content/284/
+
+视频讲解: https://www.acwing.com/video/943/
+
+```c++
+基本思路: 
+
+1. 用数组来表示dp 将数组分隔成不同的区间 
+  按照区间划分的临界点 来作为遍历对象 
+  
+  
+```
+
+
+
+活动打卡: https://www.acwing.com/activity/content/11/
+
+
+
+要求的是只能合并相邻集合
+
+
 
 
 
