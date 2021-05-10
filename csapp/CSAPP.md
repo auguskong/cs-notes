@@ -160,7 +160,21 @@ long x = *xp;
 
 ### 3.6 Control
 
+
+
+Processor State
+
+* Temporary data (%rax)
+* Location of runtime stack (%rsp)
+* Location of current code control point
+* Status of recent tests e.g.CF ZF SF OF 
+
 ### 3.7 Procedures
+
+* Control 
+* Data 
+* Memory
+* 
 
 ### 3.8 Array Allocation and Access
 

@@ -824,8 +824,10 @@ int main() {
 
 1. 用数组来表示dp 将数组分隔成不同的区间 
   按照区间划分的临界点 来作为遍历对象 
+  集合表示的是所有将[L, R]这个区间中的石子合并成一堆的方案的集合
   
-  
+  f[L, k] 本身是左边集合的最小值 而f[k + 1, R]是右边集合的最小值 相互之间没有重叠是独立的，所以可以直接进行求和操作。合并操作的代价是S[R] - S[L - 1]
+  转移方程是 f[L, k] + f[k + 1, R] + S[R] - S[L - 1]
 ```
 
 
@@ -835,6 +837,53 @@ int main() {
 
 
 要求的是只能合并相邻集合
+
+
+
+区间DP的固定遍历模式,先枚举区间长度
+
+```c++
+for (int len = 2; len <= n; len++) 
+  // 遍历区间端点
+  for (int l = 1; l + len - 1 <= n; l++)
+    
+```
+
+
+
+```c++
+// 我的实现
+
+#include <iostream>
+using namespace std;
+
+const int N = 310, INF = 1e9;
+
+int n;
+int q[N], s[N], f[N][N];
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> q[i];
+    for (int i = 1; i <= n; i++) s[i] = s[i - 1] + q[i];
+    
+    for (int len = 2; len <= n; len++) {
+        for (int l = 1; l + len - 1 <= n; l++) {
+            int r = l + len - 1;
+            f[l][r] = INF;
+            
+            for (int k = l; k <= r; k++) {
+                // 前缀和是谁的前缀? 合并区间(一个部分区间) 堆的和
+                f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);
+            }
+        }
+    }
+    
+    printf("%d", f[1][n]);
+    
+    return 0;
+}
+```
 
 
 
@@ -857,3 +906,8 @@ int main() {
 
 
 ### 记忆化搜索
+
+
+
+#### 滑雪
+
