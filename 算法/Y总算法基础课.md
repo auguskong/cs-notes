@@ -911,3 +911,80 @@ int main() {
 
 #### 滑雪
 
+
+
+表示所有从点(i, j) 开始滑的路径 属性是Max 
+
+`f[i][j]` :
+
+
+
+状态计算:  
+
+前提条件: 
+
+当前点还没有被计算过
+
+四个方向中高度更小的情况下
+
+
+
+```c++
+// 我的实现
+
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 310;
+
+int n, m;
+int f[N][N], h[N][N];
+
+int dx[4] = {0, 0, -1, 1}, dy[4] = {1, -1, 0, 0};
+
+
+
+int dfs(int x, int y) {
+
+    if (f[x][y] != -1) {
+        return f[x][y];
+    }
+    
+    f[x][y] = 1;
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (nx > 0 && nx <= n && ny > 0 && ny <= m && h[nx][ny] < h[x][y]) {
+            f[x][y] = max(f[x][y], dfs(nx, ny) + 1); // 这个地方应该继续搜下去 而不是直接用f[nx][ny]中存的值
+        }
+    }
+    
+    return f[x][y];
+}
+
+int main() {
+    scanf("%d %d", &n, &m);
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            scanf("%d", &h[i][j]);
+        }
+    }
+    
+    memset(f, -1, sizeof f);
+    
+    int res = 1;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            res = max(res, dfs(i, j));
+        }
+    }
+    printf("%d", res);
+    
+    return 0;
+}
+```
+
