@@ -705,22 +705,202 @@ a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
 
 按照一种线性关系来进行递推
 
+<<<<<<< HEAD
 最长上升子序列
+=======
+
+
+#### 数字三角形
+
+题目: https://www.acwing.com/problem/content/900/
+
+
+
+```c++
+// 我的实现
+
+基本思路: 
+1. 从最下层的数字向上走 (这样最后只需要返回f[1][1]即可)
+  1. 最下层的元素直接复制原数组最下层
+  2. 非最下层的其他元素f[i][j]只能有两个选项 f[i + 1][j] 同列 f[i + 1][j] 靠右的一列
+2. f[i][j] 表示的是从最底层走到当前位置的
+  
+#include <iostream>
+using namespace std;
+
+const int N = 510;
+int n;
+int f[N][N], q[N][N];
+
+int main() {
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            scanf("%d", &q[i][j]);
+        }
+    }
+    
+    for (int i = 1; i <= n; i++) {
+        f[n][i] = q[n][i];
+    }
+    for (int i = n - 1; i >= 1; i--) {
+        for (int j = 1; j <= i; j++) {
+            f[i][j] = max(f[i + 1][j], f[i + 1][j + 1]) + q[i][j];
+        }
+    }
+    printf("%d", f[1][1]);
+    return 0;
+}
+
+```
+
+
+
+#### 最长上升子序列
+
+题目: https://www.acwing.com/problem/content/897/
+
+
+
+```c++
+// 我的实现
+
+基本思路: 
+1. f[i] 表示以第i个数字结尾的最长递增子序列
+2. 从前向后依次遍历每个数字 重新检查当前位置之前的所有元素 如果有更长的上升序列就比较并更新 f[i] 和 max, 没有就保留原来的最长序列 
+3. 
+
+#include <iostream>
+using namespace std;
+
+const int N = 1010;
+int n;
+int q[N], f[N];
+
+int main() {
+    int res = 0;
+    scanf("%d", &n);
+    for (int i = 1; i <= n; i++) {
+        scanf("%d", &q[i]);
+    }
+    
+    for (int i = 1; i <= n; i++) {
+        f[i] = 1;
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= i; j++) {
+            if (q[i] > q[j]) {
+                f[i] = max(f[i], f[j] + 1);
+                res = max(f[i], res);
+            }
+        }
+    }
+    
+    printf("%d", res);
+}
+```
+
+
+
+
+>>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 
 最长公共子序列
 
 
 
+<<<<<<< HEAD
+=======
+动态规划(二)视频: https://www.acwing.com/video/35/
+
+
+
+>>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 ### 区间DP
 
 
 
+<<<<<<< HEAD
 #### 合并石子 
+=======
+#### 石子合并
+
+题目: https://www.acwing.com/problem/content/284/
+
+视频讲解: https://www.acwing.com/video/943/
+
+```c++
+基本思路: 
+
+1. 用数组来表示dp 将数组分隔成不同的区间 
+  按照区间划分的临界点 来作为遍历对象 
+  集合表示的是所有将[L, R]这个区间中的石子合并成一堆的方案的集合
+  
+  f[L, k] 本身是左边集合的最小值 而f[k + 1, R]是右边集合的最小值 相互之间没有重叠是独立的，所以可以直接进行求和操作。合并操作的代价是S[R] - S[L - 1]
+  转移方程是 f[L, k] + f[k + 1, R] + S[R] - S[L - 1]
+```
+
+
+
+活动打卡: https://www.acwing.com/activity/content/11/
+
+
+>>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 
 要求的是只能合并相邻集合
 
 
 
+<<<<<<< HEAD
+=======
+区间DP的固定遍历模式,先枚举区间长度
+
+```c++
+for (int len = 2; len <= n; len++) 
+  // 遍历区间端点
+  for (int l = 1; l + len - 1 <= n; l++)
+    
+```
+
+
+
+```c++
+// 我的实现
+
+#include <iostream>
+using namespace std;
+
+const int N = 310, INF = 1e9;
+
+int n;
+int q[N], s[N], f[N][N];
+
+int main() {
+    cin >> n;
+    for (int i = 1; i <= n; i++) cin >> q[i];
+    for (int i = 1; i <= n; i++) s[i] = s[i - 1] + q[i];
+    
+    for (int len = 2; len <= n; len++) {
+        for (int l = 1; l + len - 1 <= n; l++) {
+            int r = l + len - 1;
+            f[l][r] = INF;
+            
+            for (int k = l; k <= r; k++) {
+                // 前缀和是谁的前缀? 合并区间(一个部分区间) 堆的和
+                f[l][r] = min(f[l][r], f[l][k] + f[k + 1][r] + s[r] - s[l - 1]);
+            }
+        }
+    }
+    
+    printf("%d", f[1][n]);
+    
+    return 0;
+}
+```
+
+
+
+>>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 
 
 ### 计数类DP
@@ -740,3 +920,85 @@ a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
 
 
 ### 记忆化搜索
+
+
+
+#### 滑雪
+
+
+
+表示所有从点(i, j) 开始滑的路径 属性是Max 
+
+`f[i][j]` :
+
+
+
+状态计算:  
+
+前提条件: 
+
+当前点还没有被计算过
+
+四个方向中高度更小的情况下
+
+
+
+```c++
+// 我的实现
+
+#include <iostream>
+#include <cstring>
+#include <algorithm>
+
+using namespace std;
+
+const int N = 310;
+
+int n, m;
+int f[N][N], h[N][N];
+
+int dx[4] = {0, 0, -1, 1}, dy[4] = {1, -1, 0, 0};
+
+
+
+int dfs(int x, int y) {
+
+    if (f[x][y] != -1) {
+        return f[x][y];
+    }
+    
+    f[x][y] = 1;
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i];
+        int ny = y + dy[i];
+        if (nx > 0 && nx <= n && ny > 0 && ny <= m && h[nx][ny] < h[x][y]) {
+            f[x][y] = max(f[x][y], dfs(nx, ny) + 1); // 这个地方应该继续搜下去 而不是直接用f[nx][ny]中存的值
+        }
+    }
+    
+    return f[x][y];
+}
+
+int main() {
+    scanf("%d %d", &n, &m);
+    
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            scanf("%d", &h[i][j]);
+        }
+    }
+    
+    memset(f, -1, sizeof f);
+    
+    int res = 1;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+            res = max(res, dfs(i, j));
+        }
+    }
+    printf("%d", res);
+    
+    return 0;
+}
+```
+
