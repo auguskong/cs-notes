@@ -703,7 +703,23 @@ a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
 
 
 
+按照一种线性关系来进行递推
+
+最长上升子序列
+
+最长公共子序列
+
+
+
 ### 区间DP
+
+
+
+#### 合并石子 
+
+要求的是只能合并相邻集合
+
+
 
 
 

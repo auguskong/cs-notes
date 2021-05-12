@@ -600,8 +600,69 @@ https://security.stackexchange.com/questions/126407/why-does-chrome-send-four-br
 
 
 
-## 进阶知识点
+## Animated Template (2021.5.11)
+
+
+
+### 资源链接
+
+Taiwind 官网: https://www.creative-tim.com/learning-lab/tailwind-starter-kit/presentation
+
+
+
+模板页面: https://www.creative-tim.com/learning-lab/tailwind-starter-kit/documentation/download
+
+
+
+使用HTML Fomatter 来进行HTML格式调整
+
+
+
+免费图片: 
+
+https://unsplash.com/
+
+
+
+Animation JS 网站: https://michalsnik.github.io/aos/
+
+
+
+可以使用`async`关键字来异步加载third party library 先将页面render出来可以让用户感觉网页速度比较快
+
+
+
+
+
+直接读文档 添加class 类型来添加动画效果
+
+```
+data-aos="fade-up
+```
+
+
+
+提高网站加载性能的技巧: 
+
+https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/loading-third-party-javascript
+
+
+
+
+
+## Music Player (2021.5.12)
+
+
+
+
+
+## JS 进阶知识点
 
 Fix memory problems: https://developer.chrome.com/docs/devtools/memory-problems/
 
 Record heap snapshots: https://developer.chrome.com/docs/devtools/memory-problems/heap-snapshots/ 
+
+
+
+
+
