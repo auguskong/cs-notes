@@ -654,6 +654,42 @@ https://developers.google.com/web/fundamentals/performance/optimizing-content-ef
 
 
 
+知识点
+
+
+
+style the container
+
+
+
+### CSS
+
+border-radius // 增加圆角效果
+
+box-shadow // 增加阴影效果
+
+
+
+使用vw 来自动对齐 依据box-sizing 来自动调整
+
+改body 中的font可以直接修改全局的字体
+
+
+
+定义两个function 一个play 一个pause 添加一个event listener 直接监听
+
+
+
+```
+Uncaught (in promise) DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD
+```
+
+
+
+为啥自动播放了? 
+
+addEventListener里面用的是`prevSong()` 需要改成
+
 
 
 ## JS 进阶知识点
