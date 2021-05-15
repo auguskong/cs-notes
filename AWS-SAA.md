@@ -1,3 +1,31 @@
+### SNS
+
+**名词解释**
+
+**重点 / 考点**
+### SQS
+
+**名词解释**
+* Long/Short Polling
+* Visibility Timeout
+
+
+**重点 / 考点**
+### Step Functions 
+
+**名词解释**
+
+**重点 / 考点**
+### AWS CloudFormation
+
+**名词解释**
+
+**重点 / 考点**
+### AWS Config 
+**名词解释**
+
+**重点 / 考点**
+
 \### EC2
 
 **名词解释**
