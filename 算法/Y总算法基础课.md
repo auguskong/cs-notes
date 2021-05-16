@@ -705,7 +705,7 @@ a.cpp:18:48: error: no matching function for call to 'max(int [1010], int*)'
 
 按照一种线性关系来进行递推
 
-<<<<<<< HEAD
+
 最长上升子序列
 =======
 
@@ -802,27 +802,22 @@ int main() {
 
 
 
-
->>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
-
 最长公共子序列
 
 
 
-<<<<<<< HEAD
-=======
+
+
 动态规划(二)视频: https://www.acwing.com/video/35/
 
 
 
->>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 ### 区间DP
 
 
 
-<<<<<<< HEAD
 #### 合并石子 
-=======
+
 #### 石子合并
 
 题目: https://www.acwing.com/problem/content/284/
@@ -844,14 +839,11 @@ int main() {
 
 活动打卡: https://www.acwing.com/activity/content/11/
 
-
->>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
-
 要求的是只能合并相邻集合
 
 
 
-<<<<<<< HEAD
+
 =======
 区间DP的固定遍历模式,先枚举区间长度
 
@@ -899,8 +891,6 @@ int main() {
 ```
 
 
-
->>>>>>> d4b5d1a075e8ae50d284b279ba0944abb049cb61
 
 
 ### 计数类DP
