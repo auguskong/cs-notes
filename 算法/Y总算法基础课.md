@@ -609,7 +609,122 @@ class Solution {
 
 
 
-Week7 基本数据结构
+
+
+## 搜索与图论
+
+
+
+### DFS
+
+排列数字
+
+
+
+每个数字都有取 和 不取 两种选择 这两种选择是如何确定的 
+
+通过一个for loop 循环来遍历每一个数字
+
+dfs(取)
+
+dfs(不取)
+
+
+
+如果当前的数字数量是n的话 就直接print
+
+
+
+如何按照字典顺序列出所有方案呢? 
+
+找一个hashmap 存一下? 按照顺序走? 
+
+
+
+先要标记当前点被遍历过了 
+
+
+
+path里面存的是路径 
+
+state里面存的是是否要取当前点
+
+
+
+数字1可以出现在第1位/第2位/.../第n-1位/第n位
+
+
+
+```c++
+#include <iostream>
+
+using namespace std;
+
+int n;
+const int N = 10;
+
+int path[N];
+bool state[N];
+
+void dfs(int u) { // u是搜索的当前位置
+    if (u > n) {
+        for (int i = 1; i <= n; i++) {
+            cout << path[i] << " ";
+        }
+        cout << endl;
+    } else {
+        for (int i = 1; i <= n; i++) { // 1 - n 是所有的搜索域
+            if (!state[i]) { // 只有当前的数字i在之前的遍历没有被添加过的情况下才能继续添加, 保证不重复
+              // 这里如果允许重复的话 代码应该如何修改? 
+                state[i] = true;
+                path[u] = i;
+                dfs(u + 1);
+                state[i] = false;
+            }
+        }
+    }
+}
+
+int main() {
+    scanf("%d", &n);
+    dfs(1);
+    return 0;
+}
+```
+
+
+
+
+
+
+
+
+
+#### N-皇后
+
+不能存在于同一行/列/斜线上
+
+
+
+如何来搜索整个路径呢? 
+
+先要从第一行来走  
+
+每一个位置都放 所有的样本范围都要依次尝试 
+
+在放好之后打标记怎么加? 
+
+直接用同一个数组 ? 如果加了之后不行在回来
+
+backtracking?
+
+
+
+
+
+### BFS
+
+
 
 
 
