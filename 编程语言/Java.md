@@ -1,3 +1,29 @@
+
+
+declare multiple Java Arrays on same line
+
+`int[] a, b, c = new int[10];`
+
+这种写法只会initialize c 数组, a和b 仍然是找不到的
+
+
+
+Java class 中定义global variable需要使用public static 关键字前缀
+
+
+
+定义HashMap的时候用包装类 Integer 而不是Int
+
+for (Integer i: map.keySet()) {
+            System.out.println("key: " + i + " value: " + map.get(i));
+        }
+
+​                System.out.println("random value: " + currHead.random.val);
+
+
+
+
+
 Debug:
 修改function调用参数时 至少要改三个地方 **initialization 主函数****signature 函数本身****invoke 调用函数**
 基本操作:PQ 声明new Comparator<Type>
