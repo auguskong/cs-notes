@@ -1,12 +1,12 @@
-## Basics
+# Basics
 
 
 
-### Compute
+## Compute
 
 
 
-Elastic Compute Cloud(EC2)
+### Elastic Compute Cloud(EC2)
 
 
 
@@ -40,19 +40,77 @@ Elastic Compute Cloud(EC2)
 
 \* AMI(Amazon Machine Image): reusable template include OS + additional installations
 
-\* Status
 
-\* Running
 
-\* Stop: 关机 但是EBS还attach
+#### **EC2 Instance**
 
-\* Terminate: 停止使用整个instance, root device volume is deleted
+* Running
+* Stop: 关机 但是EBS还attach 类似Sleep 状态? 
+* Terminate: 停止使用整个instance, root device volume is deleted
+
+
+
+
+
+#### **Networking**
+
+##### **Placement Groups**
+
+* Cluster: launch each associated instance into a single availability zone within dlose physical proximity to each other. low latency network 适用于performance要求高 对容错要求低的application
+
+* ![image-20210522220744093](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220744093.png)
+
+* Spread: 
+
+* ![image-20210522220720385](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220720385.png)
+
+* Partition: 增加硬件容错能力 每个partition属于相同的rack 有当杜的 power source 和 network, 但是partition之间不共享rack 可以隔离hardware failure
+
+*  ![image-20210522220732759](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220732759.png)
+
+  ##### **IP address**
+
+
+
+#### **Price Model**
+
+* on-demand model: 按照小时计价 最灵活价格也最高
+* reserve instance: 12个月以上 可以签合同锁定
+* spot market: 竞价 对于能够接受随时中断的job 价格最低
+
+
+
+#### Security
+
+##### **Security Group**
+
+起到firewall的作用 By default, a security group will deny all incoming traffic while permitting all outgoing traffic. 只出不进 通过policy rule 来进行设定
+
+
+
+##### IAM Roles
+
+##### NAT Devices
+
+
+
+#### Storage
+
+
 
 \* Root Device Volumes: contains the image used to boot the instance
 
 \* Instance Store-backed instance: Stop之后就被删除 不存在stop状态 只有Running 和 Terminate
 
 \* Amazon EBS-backed instance: 会保留在EBS中
+
+
+
+
+
+#### **Auto Scaling**
+
+
 
 **重点 / 考点**
 
@@ -76,11 +134,11 @@ Elastic Compute Cloud(EC2)
 
 
 
-### Networking
+## Networking
 
 
 
-#### VPC: Virtual Private Cloud
+### VPC: Virtual Private Cloud
 
 
 
@@ -194,8 +252,6 @@ S3: simple web services interface to store and retrieve any amount of data from 
 
 
 
-
-
 S3 Storage Class:
 
 * S3 Standard
@@ -224,23 +280,71 @@ S3 Encryption:
 
 
 
-
-
 ### Database
 
 ### Application Management
 
-### Security and Identity
+## Security and Identity
 
-### Application Integration
+### IAM
 
-#### SNS
+
+
+本质是对你的account账号上的资源进行一种更细致的管理
+
+Reference:
+
+[深入理解IAM和访问控制-知乎陈天](https://www.zhihu.com/column/p/20330438)
+
+**名词解释**
+
+* Role: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过 
+* Group: a collection of IAM users, you can attach access control policies to a group
+* User: 在你的account之内的 可以用另外的账号密码进行登录
+
+
+
+\* Policies
+
+\* Identity providers
+
+**重点 / 考点**
+
+IAM policy 和 Access Keys的区别
+
+Access Key 是给EC2用的, 作为一种认证信息来使用，不是用来加密的
+
+STS: 发一个临时token来做认证 等价于IAM的Access Key
+
+Key pairs .pem file 用来登录EC2
+
+STS: Security Token Service
+
+
+
+**Q&A**:
+
+identity provider 是什么?
+
+Active Directory
+
+SAML 2.0-Based ?
+
+SSL encryption: encrypt data when in-transit
+
+
+
+
+
+## Application Integration
+
+### SNS
 
 **名词解释**
 
 **重点 / 考点**
 
-#### SQS
+### SQS
 
 **名词解释**
 
@@ -370,62 +474,6 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
 可以Set up 各种API
 
 
-
-\## Security & Identity
-
-\### IAM
-
-![4ad504016a173143504726a72fd3d87f.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p283)
-
-本质是对你的account账号上的资源进行一种更细致的管理
-
-Reference:
-
-[深入理解IAM和访问控制-知乎陈天](https://www.zhihu.com/column/p/20330438)
-
-**名词解释**
-
-\* IAM Role / Group / User
-
-\* Groups: a collection of IAM users, you can attach access control policies to a group
-
-![ce7efb044607b482c9c9906226fb8e1f.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p284)
-
-\* Users: user是在你的account之内的 可以用另外的账号密码进行登录
-
-![d404e163175cd52ce0b85f9750f95712.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p285)
-
-\* Roles: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过
-
-\* Policies
-
-\* Identity providers
-
-**重点 / 考点**
-
-IAM policy 和 Access Keys的区别
-
-Access Key 是给EC2用的, 作为一种认证信息来使用，不是用来加密的
-
-STS: 发一个临时token来做认证 等价于IAM的Access Key
-
-Key pairs .pem file 用来登录EC2
-
-STS: Security Token Service
-
-**Q&A**:
-
-identity provider 是什么?
-
-Active Directory
-
-SAML 2.0-Based ?
-
-SSL encryption: encrypt data when in-transit
-
-\### KMS (Key Management Service)
-
-![b189dc085e5d8e1718e97ad0fb9c67ab.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p281)
 
 \## Compliance
 
