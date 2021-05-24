@@ -1,84 +1,38 @@
-### SNS
-
-**名词解释**
-
-**重点 / 考点**
-### SQS
-
-**名词解释**
-* Long/Short Polling
-* Visibility Timeout
-
-
-**重点 / 考点**
-### Step Functions 
-
-**名词解释**
-
-**重点 / 考点**
-### AWS CloudFormation
-
-**名词解释**
-
-**重点 / 考点**
-### AWS Config 
-**名词解释**
-
-**重点 / 考点**
-
-\### EC2
-
-**名词解释**
-
-\* Key pairs:
+# Basics
 
 
 
-\* Placement groups:
-
-\* Cluster: 全部instance在同一个group中
+## Compute
 
 
 
-\* Partition: spread EC2 instances across logical partitions
+### Elastic Compute Cloud(EC2)
 
 
 
-\* Spread: 每个instance相互独立 can span multiple AZ in the same Region
+名词解释: 
+
+* Launch configuration:
+
+* Autoscaling group:
+
+* Load balancer: 只能在同一个region 中进行balance
+
+* Target group:
+
+* Elastic IP 是跟着Accounts走的 可以assign给不同的instance
+
+* Pricing
+
+* On-Demand instance: 按秒计价收费
+
+* Spot EC2 instance: 可能会被随时interrupt stop/terminate 可以选Spot Block来限定一个确定时间
 
 
 
-\* Security groups:
+* Dedicated Hosts:
 
-
-
-\* Load balancers:
-
-\* Volumes(EBS):
-
-
-
-\* Launch configuration:
-
-\* Autoscaling group:
-
-\* Load balancer: 只能在同一个region 中进行balance
-
-\* Target group:
-
-\* Elastic IP 是跟着Accounts走的 可以assign给不同的instance
-
-\* Pricing
-
-\* On-Demand instance: 按秒计价收费
-
-\* Spot EC2 instance: 可能会被随时interrupt stop/terminate 可以选Spot Block来限定一个确定时间
-
-
-
-\* Dedicated Hosts:
-
-\* Reserved instance: 签订长期合约 1年/3年
+* Reserved instance: 签订长期合约 1年/3年
 
 \* Standard
 
@@ -86,19 +40,77 @@
 
 \* AMI(Amazon Machine Image): reusable template include OS + additional installations
 
-\* Status
 
-\* Running
 
-\* Stop: 关机 但是EBS还attach
+#### **EC2 Instance**
 
-\* Terminate: 停止使用整个instance, root device volume is deleted
+* Running
+* Stop: 关机 但是EBS还attach 类似Sleep 状态? 
+* Terminate: 停止使用整个instance, root device volume is deleted
+
+
+
+
+
+#### **Networking**
+
+##### **Placement Groups**
+
+* Cluster: launch each associated instance into a single availability zone within dlose physical proximity to each other. low latency network 适用于performance要求高 对容错要求低的application
+
+* ![image-20210522220744093](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220744093.png)
+
+* Spread: 
+
+* ![image-20210522220720385](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220720385.png)
+
+* Partition: 增加硬件容错能力 每个partition属于相同的rack 有当杜的 power source 和 network, 但是partition之间不共享rack 可以隔离hardware failure
+
+*  ![image-20210522220732759](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220732759.png)
+
+  ##### **IP address**
+
+
+
+#### **Price Model**
+
+* on-demand model: 按照小时计价 最灵活价格也最高
+* reserve instance: 12个月以上 可以签合同锁定
+* spot market: 竞价 对于能够接受随时中断的job 价格最低
+
+
+
+#### Security
+
+##### **Security Group**
+
+起到firewall的作用 By default, a security group will deny all incoming traffic while permitting all outgoing traffic. 只出不进 通过policy rule 来进行设定
+
+
+
+##### IAM Roles
+
+##### NAT Devices
+
+
+
+#### Storage
+
+
 
 \* Root Device Volumes: contains the image used to boot the instance
 
 \* Instance Store-backed instance: Stop之后就被删除 不存在stop状态 只有Running 和 Terminate
 
 \* Amazon EBS-backed instance: 会保留在EBS中
+
+
+
+
+
+#### **Auto Scaling**
+
+
 
 **重点 / 考点**
 
@@ -120,93 +132,41 @@
 
 \* EC2 Termination policy: terminate 哪一个instance的policy
 
-\#### Compare
 
-different type of instances
 
-\### Lambda
+## Networking
+
+
+
+### VPC: Virtual Private Cloud
+
+
 
 **名词解释**
 
-\* Lambda@Edge
+* Route Table: contains a set of rules, called routes, that are used to determine where network traffic is directed
+* Subnet: a range of IP addresses in your VPC. add AWS resources into a specified subnet.
+* Public subnet: resources that must be connected to the internet
+* Private subnet: for resources that won't be connected to the internet.
+* Internet gateway: instaces <=> public internet
+* NAT gateways: private IP <=> NAT <=> public internet
+* Egress-only internet gateways: IPv6 traffic
+* Elastic Network Interface(ENI): virtual network interface you can attach to an instance in VPC
+* Elastic IP address: a reserved public IP address you can assign to any EC2 instance in a particular region
+* Security Group(instance level): a virtual firewall control inbound and outbound traffic for your **instances**
+* Network Access Control List(NACL): **subnet** level additional firewall
+* NAT: Network Address Translation 在public IP 和 private IP 之间做切换来解决公共IP数量不足的问题
+* VPC Endpoint: 用来和其他不在VPC内部的AWS建立connection, 比如S3, DynamoDB
+* Interface Endpoints
+* Gateway Endpoints
 
-*
+* DHCP server: assign a computer an IP address + Subnet mask + Default gateway + DNS server 否则用人工添加会很麻烦
 
-**重点 / 考点**
+* VPC Flow Logs: capture information about the **IP traffic** going to and from network interfaces in your VPC
 
-\* Lambda Destination
-
-*
+* VPC Peering: connect the different VPCs(between your VPCs, or with a VPC in another AWS account) 两个network之间的instance都可以相互通信
 
 
-
-\## Networking
-
-\### VPC
-
-VPC: Virtual Private Cloud
-
-![426970692a51d3cd9326e24d03d4660a.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p249)
-
-**名词解释**
-
-\* Route Table: contains a set of rules, called routes, that are used to determine where network traffic is directed
-
-\* Subnet: a range of IP addresses in your VPC. add AWS resources into a specified subnet.
-
-\* public subnet: resources that must be connected to the internet
-
-\* private subnet: for resources that won't be connected to the internet.
-
-\* Internet gateway: instaces <=> public internet
-
-\* NAT gateways: private IP <=> NAT <=> public internet
-
-\* Egress-only internet gateways: IPv6 traffic
-
-\* Elastic Network Interface(ENI): virtual network interface you can attach to an instance in VPC
-
-\* Elastic IP address: a reserved public IP address you can assign to any EC2 instance in a particular region
-
-\* Security Group(instance level): a virtual firewall control inbound and outbound traffic for your **instances**
-
-\* Network Access Control List(NACL): **subnet** level additional firewall
-
-\* NAT: Network Address Translation 在public IP 和 private IP 之间做切换来解决公共IP数量不足的问题
-
-\* VPC Endpoint: 用来和其他不在VPC内部的AWS建立connection, 比如S3, DynamoDB
-
-\* Interface Endpoints
-
-\* Gateway Endpoints
-
-\* DHCP server: assign a computer an IP address + Subnet mask + Default gateway + DNS server 否则用人工添加会很麻烦
-
-\* VPC Flow Logs: capture information about the **IP traffic** going to and from network interfaces in your VPC
-
-![f4362a045c7386b0f2aeac9c94f48e90.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p248)
-
-\* VPC Peering: connect the different VPCs(between your VPCs, or with a VPC in another AWS account) 两个network之间的instance都可以相互通信
-
-![61bb8d873ddcac3ef395a5ae3b303661.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p250)
-
-\* 支持的操作
-
-\* cross region
-
-\* cross account
-
-\* 不支持的操作
-
-\* Overlapping CIDR blocks: IP 不能重叠 ![db24b80640923b62f2f7927f01d56e78.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p251)
-
-\* Transitive peering: A => B => C 不能传递 ![4b0c13140f83c1510ff678557d040507.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p252)
-
-\* Edge to edge routing through a gateway or private connection 不能extend![17395441248bdabb30d557c0cc9dbfcd.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p253)
-
-https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
-
-\#### Compare
 
 **Default vs. Non-Default VPC:**
 
@@ -246,27 +206,89 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
 
 \* NAT Gateway / NAT Instance: 只出不进 禁止public network的traffic
 
-\### API Gateway
 
-![870bf88a3b396dc0f0e395a2861c41bf.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p286)
 
-可以Set up 各种API
-
-\## Content Delivery
-
-CloudFront
-
-Route53
-
-AWS Global Accelerator: 用Amazon的network来做加速
+#### Direct Connect
 
 
 
-\## Security & Identity
+#### Route 53
 
-\### IAM
 
-![4ad504016a173143504726a72fd3d87f.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p283)
+
+### Storage
+
+
+
+#### S3 Simple Storage Service
+
+S3: simple web services interface to store and retrieve any amount of data from anywhere on the web.
+
+* safe place to store files
+* It is Object-based storage
+
+* The data is spread across multiple devices and facilities
+* S3 is a universal namespace. must be unique globally -> web address
+
+* Object based
+
+* Key: name of the object
+
+* Value: data and is made up of a sequence of bytes
+
+* Version ID: version
+
+* Metadata: Data about the data you are storing
+
+* Subresources
+
+* Access Control Lists
+
+* Consistency Model:
+
+* Read After Write for PUTS of new Objects
+
+* Eventual Consistency: overwrites PUTS and DELETES
+
+
+
+S3 Storage Class:
+
+* S3 Standard
+
+* S3 - IA : 更便宜 更少的操作频率
+
+* S3 One Zone - IA: 只在一个region内操作 不涉及到多个region间的调用
+
+* S3 - Intelligent Tiering: 动态调整价格
+
+* S3 Glacier: for data archiving. retrieval times from mins to hours
+
+* S3 Glacier Deep Archive: 最便宜的 retrieval time of 12 hours
+
+* S3 URI and Amazon Resource Name(ARN)
+
+* Reduced Redundancy Storage (RRS) is an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage.
+
+
+
+S3 Encryption:
+
+* Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
+
+* Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
+
+
+
+### Database
+
+### Application Management
+
+## Security and Identity
+
+### IAM
+
+
 
 本质是对你的account账号上的资源进行一种更细致的管理
 
@@ -276,17 +298,11 @@ Reference:
 
 **名词解释**
 
-\* IAM Role / Group / User
+* Role: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过 
+* Group: a collection of IAM users, you can attach access control policies to a group
+* User: 在你的account之内的 可以用另外的账号密码进行登录
 
-\* Groups: a collection of IAM users, you can attach access control policies to a group
 
-![ce7efb044607b482c9c9906226fb8e1f.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p284)
-
-\* Users: user是在你的account之内的 可以用另外的账号密码进行登录
-
-![d404e163175cd52ce0b85f9750f95712.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p285)
-
-\* Roles: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过
 
 \* Policies
 
@@ -304,6 +320,8 @@ Key pairs .pem file 用来登录EC2
 
 STS: Security Token Service
 
+
+
 **Q&A**:
 
 identity provider 是什么?
@@ -314,9 +332,148 @@ SAML 2.0-Based ?
 
 SSL encryption: encrypt data when in-transit
 
-\### KMS (Key Management Service)
 
-![b189dc085e5d8e1718e97ad0fb9c67ab.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p281)
+
+
+
+## Application Integration
+
+### SNS
+
+**名词解释**
+
+**重点 / 考点**
+
+### SQS
+
+**名词解释**
+
+* Long/Short Polling
+* Visibility Timeout
+
+**重点 / 考点**
+
+
+
+
+
+
+
+## Case Study
+
+
+
+AWS case studies: https://aws.amazon.com/solutions/case-studies/
+
+Netflix on AWS: https://aws.amazon.com/solutions/case-studies/netflix/
+
+Intuit on AWS: https://aws.amazon.com/solutions/case-studies/Intuit/
+
+
+
+## 错题整理
+
+
+
+## Service 对比
+
+EFS vs. EBS
+
+S3 vs. EFS vs. EBS
+
+
+
+
+
+### Step Functions 
+
+**名词解释**
+
+**重点 / 考点**
+
+### AWS CloudFormation
+
+**名词解释**
+
+**重点 / 考点**
+### AWS Config 
+**名词解释**
+
+**重点 / 考点**
+
+\### EC2
+
+**名词解释**
+
+\* Key pairs:
+
+
+
+##### Placement groups:
+
+* Cluster: 全部instance在同一个group中
+
+* Partition: spread EC2 instances across logical partitions
+
+* Spread: 每个instance相互独立 can span multiple AZ in the same Region
+
+
+
+
+
+* Security groups:
+
+* Load balancers:
+
+* Volumes(EBS):
+
+
+
+
+
+
+
+
+
+**名词解释**
+
+* Lambda@Edge
+
+
+
+**重点 / 考点**
+
+\* Lambda Destination
+
+*
+
+
+
+\* 支持的操作
+
+\* cross region
+
+\* cross account
+
+\* 不支持的操作
+
+\* Overlapping CIDR blocks: IP 不能重叠 ![db24b80640923b62f2f7927f01d56e78.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p251)
+
+\* Transitive peering: A => B => C 不能传递 ![4b0c13140f83c1510ff678557d040507.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p252)
+
+\* Edge to edge routing through a gateway or private connection 不能extend![17395441248bdabb30d557c0cc9dbfcd.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p253)
+
+https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
+
+\#### Compare
+
+
+
+\### API Gateway
+
+可以Set up 各种API
+
+
 
 \## Compliance
 
@@ -342,75 +499,9 @@ IAM
 
 
 
-\## Storage
-
-\### S3 (Amazon Simple Storage Service)
 
 
-
-**名词解释**
-
-S3: Simple Storage Service: simple web services interface to store and retrieve any amount of data from anywhere on the web.
-
-\* safe place to store files
-
-\* It is Object-based storage
-
-\* The data is spread across multiple devices and facilities
-
-S3 is a universal namespace. must be unique globally -> web address
-
-\* Object based
-
-\* Key: name of the object
-
-\* Value: data and is made up of a sequence of bytes
-
-\* Version ID: version
-
-\* Metadata: Data about the data you are storing
-
-\* Subresources
-
-\* Access Control Lists
-
-\* Torrent
-
-\* Consistency Model:
-
-\* Read After Write for PUTS of new Objects
-
-\* Eventual Consistency: overwrites PUTS and DELETES
-
-\* Storage Class
-
-\* S3 Standard
-
-\* S3 - IA : 更便宜 更少的操作频率
-
-\* S3 One Zone - IA: 只在一个region内操作 不涉及到多个region间的调用
-
-\* S3 - Intelligent Tiering: 动态调整价格
-
-\* S3 Glacier: for data archiving. retrieval times from mins to hours
-
-\* S3 Glacier Deep Archive: 最便宜的 retrieval time of 12 hours
-
-![cb07796de9ce6542e001c6b1a96ef803.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p275)
-
-\* S3 URI and Amazon resource name(ARN)
-
-![1433063ab7b60890a8f084384525e227.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p276)
-
-\* Reduced Redundancy Storage (RRS) is an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage.
-
-\* Encryption:
-
-\* Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
-
-![67cf0a0cb4daeb048ff1eacd30e1d279.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p279)
-
-\* Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
+## 
 
 \* Use a customer master key (CMK) stored in AWS Key Management Service (AWS KMS).
 
@@ -526,15 +617,9 @@ Mount Target
 
 \#### Compare
 
-EFS vs. EBS
 
-![ecd6ff2301becbdefe6abf4626c897a9.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p270)
 
-S3 vs. EFS vs. EBS
 
-![5a105d85526a512b01c1850acd9ed1bb.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p271)
-
-![86ca7fe609a1cd676f19d38476f2f462.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p272)
 
 \### AWS Storage Gateway
 
