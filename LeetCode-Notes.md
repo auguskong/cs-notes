@@ -1,3 +1,5 @@
+
+
 ## 21.5.17
 
 
@@ -872,4 +874,92 @@ class Solution:
         
         
 ```
+
+
+
+Permutations II 
+
+保证相同数字的相对顺序是一致的 所以不能使用跳过的元素 来避免顺序混乱
+
+```python
+
+if i> 0 and nums[i] == nums[i-1] and not used[i-1]:
+    continue
+
+    
+class Solution:
+    def permuteUnique(self, nums: List[int]) -> List[List[int]]:
+        n = 10
+        res = []
+        used = [False] * n
+        nums.sort()
+        self.dfs(nums, used, [], res)
+        return res
+        
+    def dfs(self, nums: List[int], used: List[bool], path: List[int], res: List[List[int]]):
+        if (len(path) == len(nums)):
+            res.append(path)
+            return
+        for i in range(len(nums)):
+            if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:
+                continue
+            if not used[i]:
+                used[i] = True
+                self.dfs(nums, used, path+[nums[i]], res) #这里直接用path+[nums[i]] 来生成一个新的path 同时省去了backtrack 恢复现场的过程
+                used[i] = False
+          
+```
+
+
+
+5.24
+
+### Next Permutation  
+
+思维题
+
+思路: 改的是第一个升序变降序的位置 然后再将后半部分变为升序
+
+如果本身已经是降序的 就直接翻转整个序列
+
+
+
+```python
+
+#reverse list   
+nums.reverse()
+nums[i:] = nums[i:][::-1]
+>>> a = nums[:]
+>>> a == nums
+True
+>>> a is nums
+False
+
+>>> c = nums.reverse()
+>>> c is nums
+False
+>>> c == nums
+False
+>>> c
+>>> nums
+[5, 2, 6, 7, 3, 1]
+>>> c
+>>> print(c)
+None
+
+#swap element in list
+nums[i], nums[j] = nums[j], nums[i]
+```
+
+
+
+python 从后向前遍历一个List 直接用while循环来不断--操作即可
+
+基本思路:
+
+从后向前搜，如果一直是升序的 nums[i] < nums[i - 1]  继续走 如果不是升序的 就停止 当前位置 i 的元素要大于 i - 1, swap  i - 1和 后半部分比nums[i - 1] 刚刚大的element 写另一个while loop 来找到
+
+
+
+
 
