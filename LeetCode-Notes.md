@@ -961,7 +961,8 @@ python 从后向前遍历一个List 直接用while循环来不断--操作即可
 
 
 
-5.31
+## 5.29 
+
 
 #### Edit Distance
 
@@ -1042,5 +1043,183 @@ class Solution:
                     t = 1
                 f[i][j] = min(f[i][j], f[i-1][j-1] + t)
         return f[n][m]
+```
+
+
+#### Two Sum
+
+数组遍历
+
+Python中的HashMap 怎么定义
+
+
+
+exactly one solution 
+
+可以确定
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        d = {}
+        for i in range(len(nums)):
+            # 用 in 关键字来判断当前元素是否能在字典中找到
+            if target - nums[i] in d:
+                return [d.get(target - nums[i]), i]
+            d[nums[i]] = i
+```
+
+
+
+#### Add Two Numbers
+
+链表遍历
+
+while l1.next
+
+
+
+
+
+先reverse() 然后再从正向进行遍历 ?
+
+
+
+#### Reverse Linked List
+
+https://leetcode.com/problems/reverse-linked-list/
+
+
+
+需要用到三个指针 prev, curr, nextNode 
+
+将curr.next 指向了prev是reverse的关键改动
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        prev = None
+        curr = head
+        while curr:
+            nextNode = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nextNode
+        return prev
+```
+
+
+
+#### Reverse Linked List II
+
+https://leetcode.com/problems/reverse-linked-list-ii/
+
+
+
+划定了一个范围
+
+
+
+范围内的头结点 和尾巴需要单独处理 中间的可以直接用循环遍历
+
+
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseBetween(self, head: ListNode, left: int, right: int) -> ListNode:
+        i = j = 1
+        firstNext = lastBefore = prev = None
+        curr = head
+        
+        while i < right:
+            if i == left - 1:
+                lastBefore = curr
+            curr = curr.next
+            i += 1
+        firstNext = curr.next
+                
+        curr = head
+        while j < left:
+            prev = curr
+            curr = curr.next
+            j += 1
+        
+        # print("lastBefore: ", lastBefore)
+        # print("firstNext: ", firstNext)
+        # print("j: ", j)
+        # print("prev: ", prev)
+        # print("curr: ", curr)
+        while j <= right:
+            # print("list: ", head)
+            nextNode = curr.next
+            # print("nextNode: ", nextNode)
+            # print("curr: ", curr)
+            # print("prev: ", prev)
+            if j == left:
+                curr.next = firstNext
+            else:
+                curr.next = prev
+            prev = curr
+            curr = nextNode
+            j += 1
+            
+        # print("prev: ", prev)
+        # print("curr: ", curr)
+        # print("lastBefore: ", lastBefore)
+        if lastBefore:
+            lastBefore.next = prev
+        if left == 1:
+            return prev
+        return head
+```
+
+
+
+改进后的版本: 
+
+只要涉及到了head结点的修改 都需要用到dummy node
+
+```python
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseBetween(self, head: ListNode, left: int, right: int) -> ListNode:
+        dummy = ListNode(0)
+        dummy.next = head
+        lastBefore = dummy
+
+        # 先走到left node的前一个node 固定一下
+        for _ in range(left - 1):
+            lastBefore = lastBefore.next
+        prev = lastBefore.next
+        curr = prev.next
+        
+        # 反转[left, right] 区间中的节点
+        for _ in range(left, right):
+            nextNode = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nextNode
+        
+        # 此时prev 是指向right节点, curr 指向了right的下一个节点 进行辩解的处理
+        lastBefore.next.next = curr
+        lastBefore.next = prev   
+        
+        return dummy.next
+    
 ```
 
