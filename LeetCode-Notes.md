@@ -961,5 +961,86 @@ python 从后向前遍历一个List 直接用while循环来不断--操作即可
 
 
 
+5.31
 
+#### Edit Distance
+
+为什么赋值的时候直接把每一行的前三个都赋值了
+
+```python
+for i in range(n + 1):
+    # print("i: ", i)
+    f[i][0] = i
+    # print("f[{}][0]: {}".format(i, f[i][0]))
+    print("f: ", f)
+    for i in range(m + 1):
+        f[0][i] = i
+        # print("f[{}][0]: {}".format(i, f[0][0]))
+        print("i: ", i)
+        print("f: ", f)
+```
+
+
+
+开数组的时候有点问题: 
+
+
+
+```python
+两种数组赋值有什么区别???
+m = 3
+n = 2
+
+f1 = [[10] * (m+1) for _ in range(n+1)]
+'''
+>>> f1
+[[10, 10, 10, 10], [10, 10, 10, 10], [10, 10, 10, 10]]
+'''
+
+f2 = [[10] * (m+1)] * (n+1)
+'''
+>>> f2
+[[10, 10, 10, 10], [10, 10, 10, 10], [10, 10, 10, 10]]
+'''
+
+for j in range(m + 1):
+    f1[0][j] = j
+'''
+>>> f1
+[[0, 1, 2, 3], [10, 10, 10, 10], [10, 10, 10, 10]]
+''' 
+
+for j in range(m + 1):
+    f2[0][j] = j
+'''
+>>> f2
+[[0, 1, 2, 3], [0, 1, 2, 3], [0, 1, 2, 3]]
+'''
+```
+
+
+
+```python
+class Solution:
+    def minDistance(self, word1: str, word2: str) -> int:
+        n = len(word1)
+        m = len(word2)
+        f = [[1e3] * (m+1) for _ in range(n + 1)]
+        word1 = " " + word1
+        word2 = " " + word2
+        
+        for i in range(n + 1):
+            f[i][0] = i
+        for j in range(m + 1):
+            f[0][j] = j
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                f[i][j] = min(f[i-1][j], f[i][j-1]) + 1
+                if word1[i] == word2[j]:
+                    t = 0
+                else: 
+                    t = 1
+                f[i][j] = min(f[i][j], f[i-1][j-1] + t)
+        return f[n][m]
+```
 
