@@ -82,9 +82,7 @@
 
 #### Security
 
-##### **Security Group**
-
-起到firewall的作用 By default, a security group will deny all incoming traffic while permitting all outgoing traffic. 只出不进 通过policy rule 来进行设定
+##### 
 
 
 
@@ -142,6 +140,14 @@
 
 
 
+AWS Talk:
+
+[AWS Networking Fundamentals](https://www.youtube.com/watch?v=hiKPPy584Mg)
+
+
+
+
+
 **名词解释**
 
 * Route Table: contains a set of rules, called routes, that are used to determine where network traffic is directed
@@ -180,31 +186,78 @@
 
 **Security Group vs. Network ACL:**
 
-\* Security Group:
 
-\* instance level
 
-\* only support allow rules
 
-\* stateful: return traffic is automatically allowed, regardless of any rules
 
-\* evaluate all rules before deciding whether to allow traffic
+| Security Group                                               | Network ACL                                                  |
+| :----------------------------------------------------------- | ------------------------------------------------------------ |
+| Instance Level                                               | Subnet Level                                                 |
+| Stateful: return traffic is automatically allowed            | Stateless: return traffic must be explicitly allowed by the rules |
+| Support allow rules                                          | Support allow rules + deny rules                             |
+| All rules evaluated before deciding whether to allow traffic | Process rules in number order when deciding whether to allow traffic (有冲突的时候取number小的/更靠前的) |
 
-\* Network ACL (NACL):
 
-\* subnet level
 
-\* support allow rules and deny rules
 
-\* stateless: return traffic must be explicitly allowed by rules
 
-\* process rules in number order when deciding whether to allow traffic(有冲突的时候取number小的/更靠前的)
+**Security Group**起到firewall的作用 By default, a security group will deny all incoming traffic while permitting all outgoing traffic. 只出不进 通过policy rule 来进行设定
+
+
+
+
+
+Flow Logs:
+
+* Visibility
+* Troubleshooting
+* Analyze traffic flow
+* VPC/subnet/instance level 都可以
+
+
+
+![image-20210607225605956](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210607225605956.png)
+
+
+
+
+
+
+
+DNS resolution: Use Amazon DNS server 进行域名解析
+
+DNS hostnames: Have EC2 auto-assign DNS host names to instances 进行IP地址替换
+
+ 
+
+
+
+Connect your VPC:
+
+
+
+Connect to other VPCs
+
+* VPC Peering: 1 to 1
+* Transit Gateway: 作为中转链接多个VPC
+
+Connect to your on-premises network:
+
+* 
+
+
+
+
 
 **重点 / 考点:**
 
 \* Bastion host
 
 \* NAT Gateway / NAT Instance: 只出不进 禁止public network的traffic
+
+
+
+
 
 
 

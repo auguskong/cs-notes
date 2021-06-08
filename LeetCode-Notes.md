@@ -1142,3 +1142,117 @@ class Solution:
     
 ```
 
+
+
+
+
+## 6.3 
+
+
+
+### 双指针算法
+
+#### Longest Substring Without Repeating Characters
+
+https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+思路: 两个指针i 和 j同向走 用一个dict 来记录每个字符出现的次数 如果当前j指向的元素没有被使用过 继续向前走 如果已经使用过了 将i向前移动到第一次出现 j的字符的位置 同时更新结果
+
+
+
+双指针基本模板都是for loop + while loop
+
+
+
+```python
+class Solution:
+    def lengthOfLongestSubstring(self, s: str) -> int:
+        used = {} # 存字符对应的index位置
+        res = start = 0
+        for i, c in enumerate(s):
+          	# start 指向的是当前第一个没有使用过的c的位置 
+            if c in used and start <= used[c]:
+                start = used[c] + 1
+            else:
+                res = max(res, i - start + 1)
+            used[c] = i
+            
+        return res              
+        
+```
+
+ 
+
+#### Longest Palindromic Substring
+
+https://leetcode.com/problems/longest-palindromic-substring/
+
+
+
+对向双指针 如果要找最长的 一定是从两端开始找起
+
+我的思路: 
+
+两端向中间移动 来找到palindrome 存在的问题 问题分解难度有点大
+
+固定start 移动end 
+
+或者固定end 移动start 都是类似的操作 事件复杂度太高了
+
+
+
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        return self.helper(s, 0, len(s) - 1)
+                
+    def helper(self, s: str, start: int, end: int) -> str:
+        if start == end:
+            return s[start]
+        if start > end:
+            return ""
+        if start < end and s[start] == s[end] and self.isPalindrome(s, start, end):
+            return s[start: end + 1]
+        else:
+            left_str = self.helper(s, start, end - 1)
+            right_str = self.helper(s, start + 1, end)
+            all_str = self.helper(s, start + 1, end - 1)
+        return max(left_str, right_str, all_str, key=len)
+                
+    def isPalindrome(self, s: str, start: int, end: int) -> bool:
+        if start >= end: 
+            return True
+        if s[start] != s[end]:
+            return False
+        return self.isPalindrome(s, start + 1, end - 1)
+```
+
+
+
+
+
+正确思路: 
+
+需要以每一个点为中心点来进行扩展 找到对应的最长palindrome 
+
+可以用`max(..., key = len)`  来选出最长字符串 
+
+
+
+
+
+```python
+class Solution:
+    def longestPalindrome(self, s: str) -> str:
+        res = ""
+        for i in range(len(s)):
+            res = max(self.helper(s, i, i), self.helper(s, i, i+1), res, key=len)
+        return res
+        
+    def helper(self, s: str, left: int, right: int) -> str:
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return s[left + 1: right]
+```
+
