@@ -303,3 +303,109 @@ strat0 = lambda score, opponent: 1 - opponent // 10
 
 test 07的时候出问题 原因是因为 06 没有写完 醉了！！ 注意保证自己调用的dependency function都是work的
 
+## Lab 4
+
+max_subseq
+
+```python
+def max_subseq(n, t):
+    """
+    Return the maximum subsequence of length at most t that can be found in the given number n.
+    For example, for n = 20125 and t = 3, we have that the subsequences are
+        2
+        0
+        1
+        2
+        5
+        20
+        21
+        22
+        25
+        01
+        02
+        05
+        12
+        15
+        25
+        201
+        202
+        205
+        212
+        215
+        225
+        012
+        015
+        025
+        125
+    and of these, the maxumum number is 225, so our answer is 225.
+    >>> max_subseq(20125, 3)
+    225
+    >>> max_subseq(20125, 5)
+    20125
+    >>> max_subseq(20125, 6) # note that 20125 == 020125
+    20125
+    >>> max_subseq(12345, 3)
+    345
+    >>> max_subseq(12345, 0) # 0 is of length 0
+    0
+    >>> max_subseq(12345, 1)
+    5
+    """
+    if n == 0 or t == 0:
+        return 0
+    with_last = max_subseq(n // 10, t - 1) * 10 + n % 10
+    without_last = max_subseq(n // 10, t)
+    return max(with_last, without_last)
+
+```
+
+
+
+我的思路是先for loop 找最大如果最大的满足要求 这个思路不是一个recursion的思路 recursion的思路更像是 
+
+这里的base case 除了找到了最长的有效长度t 还需要考虑n == 0的时候 
+
+如何不断地缩小范围: 不断地进行除法操作来去掉最后一位数字 
+
+这里面构造数字的时候是用到了 * 10操作 将不同位数上的数字等比例放大 
+
+
+
+# Project
+
+
+
+## cats
+
+```python
+def about(topic):
+    """Return a select function that returns whether a paragraph contains one
+    of the words in TOPIC.
+
+    >>> about_dogs = about(['dog', 'dogs', 'pup', 'puppy'])
+    >>> choose(['Cute Dog!', 'That is a cat.', 'Nice pup!'], about_dogs, 0)
+    'Cute Dog!'
+    >>> choose(['Cute Dog!', 'That is a cat.', 'Nice pup.'], about_dogs, 1)
+    'Nice pup.'
+    """
+    assert all([lower(x) == x for x in topic]), 'topics should be lowercase.'
+    # BEGIN PROBLEM 2
+    "*** YOUR CODE HERE ***"
+
+    def select(paragraph):
+        paragraph = lower(paragraph)
+        # 调用split(remove_punctuation(paragraph)) 传入的是相同的paragraph参数 有点functional programming的感觉了 不同的function之前可以嵌套
+        words = split(remove_punctuation(paragraph))
+        for t in topic:
+            if t in words:
+                return True
+        return False
+
+    return select
+```
+
+
+
+注意取两个list中长度较短的 
+
+typed_words == [] 的时候直接return 0.0 来避除0错误

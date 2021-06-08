@@ -48,7 +48,58 @@
 * Stop: 关机 但是EBS还attach 类似Sleep 状态? 
 * Terminate: 停止使用整个instance, root device volume is deleted
 
+EC2 整合 
 
+ALB
+
+VPC
+
+Auto Scaling
+
+Security 
+
+
+
+每一个都需要同时考虑 4个Pillar
+
+
+
+Performance 不同资源进行协同 Divide and Conquer ? 
+
+
+
+Security 
+
+
+
+#### EC2 Auto Scaling
+
+#### 
+
+Auto 是按照已经给定过得configuration / template 来进行设定的
+
+**重点 / 考点**
+
+\* Launch configuration 如果需要进行修改的话 必须要新建一个 不能在之前的config上修改
+
+* 三种 Scaling policy
+  * step scaling policy: a set of metrics
+  * simple: single metrics
+  * target tracking: dynamic + specific metric
+
+\* Placement group的区别
+
+\* 选择一个合适类型的instance
+
+\* vCPU-based On-Demand Instance limit per region
+
+\* EC2 Termination policy: terminate 哪一个instance的policy
+
+
+
+launch configuration vs. launch template
+
+区别是什么？
 
 
 
@@ -94,7 +145,7 @@
 
 #### Storage
 
-
+这里是指的在instance内进行的 storage 不是在S3这种外部服务中的storage
 
 \* Root Device Volumes: contains the image used to boot the instance
 
@@ -105,30 +156,6 @@
 
 
 
-
-#### **Auto Scaling**
-
-
-
-**重点 / 考点**
-
-\* Launch configuration 如果需要进行修改的话 必须要新建一个 不能在之前的config上修改
-
-\* 三种 Scaling policy
-
-\* step scaling policy: a set of metrics
-
-\* simple: single metrics
-
-\* target tracking: dynamic + specific metric
-
-\* Placement group的区别
-
-\* 选择一个合适类型的instance
-
-\* vCPU-based On-Demand Instance limit per region
-
-\* EC2 Termination policy: terminate 哪一个instance的policy
 
 
 
@@ -343,6 +370,8 @@ S3 Encryption:
 
 
 
+
+
 本质是对你的account账号上的资源进行一种更细致的管理
 
 Reference:
@@ -354,6 +383,8 @@ Reference:
 * Role: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过 
 * Group: a collection of IAM users, you can attach access control policies to a group
 * User: 在你的account之内的 可以用另外的账号密码进行登录
+* IAM Policy: a document that identifies one or more actions as they relate to one or more AWS resources. This policy document also determines the *effect* (could be **Allow /Deny**) permitted by the action on the resource.
+* Any action that's not explicity allowed by a policy will be denied. 
 
 
 
