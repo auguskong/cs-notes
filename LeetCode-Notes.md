@@ -1223,3 +1223,97 @@ class Solution:
     
 ```
 
+
+
+
+
+## 6.5
+
+#### Zigzag Conversion 
+
+怎么来区分input是否进行了换行呢? 
+
+默认的zigzag 模式
+
+对于换行的 基本index 技巧 使用offset 来
+
+两个index来操作不同的
+
+```python
+class Solution:
+    def convert(self, s: str, n: int) -> str:
+        L = [''] * n
+        
+        index = 0
+        step = 1
+        
+        # 处理一下corner case
+        if n <= 1 or n > len(s):
+            return s
+        
+        for c in s:
+            if index == 0:
+                step = 1
+            elif index == n - 1:
+                step = -1
+            L[index] += c
+            index += step
+            
+        # The join() method takes all items in an iterable and joins them into one string
+        return ''.join(L) 
+        
+```
+
+
+
+## 
+
+#### Reverse Integer
+
+https://leetcode.com/problems/reverse-integer/
+
+
+
+```python
+class Solution:
+    def reverse(self, x: int) -> int:
+        res = 0
+        s = 1
+        # 需要处理负数
+        if x < 0:
+            s = -1
+            x = -x
+        while x != 0:
+            res = res * 10 + x % 10
+            x = x // 10
+            if res > pow(2,31) - 1:
+                return 0
+        return res * s
+```
+
+
+
+#### Regular Expression Matching
+
+https://leetcode.com/problems/regular-expression-matching/
+
+`*` 和`.` 会增加状态的复杂度
+
+`*`: match 0 or more of the preceding element 需要和前面的字符绑定
+
+`.`: match any single character 可以是任意的字符
+
+对于两个字符串要逐个字符遍历 分别匹配?
+
+
+
+如何处理前面的字符 需要保存记录一下前一个字符
+
+
+
+序列DP
+
+
+
+
+
