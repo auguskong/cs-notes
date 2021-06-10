@@ -159,6 +159,14 @@ def 就是指针声明
 
 ### Lambda
 
+基本定义: 
+
+![cs61a-Lambda](D:\repos\cs-notes\公开课\screenshot\cs61a-Lambda.PNG)
+
+
+
+
+
 ```python
 Q: When is the return expression of a lambda expression executed?
 A: When the function returned by the lambda expression is called.
@@ -371,6 +379,30 @@ def max_subseq(n, t):
 
 
 
+## Lab 5
+
+对应课本Chapter 2
+
+知识点:
+
+* Sequence
+  * Sequence Iteration
+  * Sequence Processing
+  * Sequence Abstraction
+
+
+
+```python
+>>> [2, 7] + digits * 2
+[2, 7, 1, 8, 2, 8, 1, 8, 2, 8]
+# list 本身也可以进行*2 操作 
+
+# for statement
+for <name> in <expression>:
+    <suite>
+<expression> 必须yield an iterable value
+```
+
 # Project
 
 
@@ -409,3 +441,11 @@ def about(topic):
 注意取两个list中长度较短的 
 
 typed_words == [] 的时候直接return 0.0 来避除0错误
+
+Problem 4 
+
+等于1的时候是否可以?
+
+
+
+## 

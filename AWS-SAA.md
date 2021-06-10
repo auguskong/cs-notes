@@ -364,15 +364,19 @@ S3 Encryption:
 
 ### Application Management
 
+
+
+
+
 ## Security and Identity
 
 ### IAM
 
 
 
+Video:
 
-
-本质是对你的account账号上的资源进行一种更细致的管理
+[Getting started with AWS identity](https://www.youtube.com/watch?v=Zvz-qYYhvMk)
 
 Reference:
 
@@ -388,9 +392,60 @@ Reference:
 
 
 
+IAM Roles
+
+![IAM-Roles](.\screenshot\IAM-Roles.PNG)IAM Identity live inside AWS accounts![IAM-AccountsInAWS](.\screenshot\IAM-AccountsInAWS.PNG)
+
+AWS Account
+
+IAM Users
+
 \* Policies
 
-\* Identity providers
+Admin policy: AdministratorAccess
+
+Read-only policy: ReadOnlyAccess
+
+
+
+Authorization: 
+
+* explicit deny / not allow -> deny
+* no deny && explicit allow -> allow
+
+![IAM-PolicyAuthorization](.\screenshot\IAM-PolicyAuthorization.PNG)
+
+可以在document里面找IAM具体的policy 
+
+https://docs.aws.amazon.com/service-authorization/latest/reference/reference_policies_actions-resources-contextkeys.html
+
+
+
+**IAM Policy Example**
+
+![IAM-Policy-EC2-example](.\screenshot\IAM-Policy-EC2-example.PNG)
+
+
+
+使用resource-based policy 来进行处理
+
+![IAM-Access-Shared-Resources](.\screenshot\IAM-Access-Shared-Resources.PNG)
+
+
+
+Same Policy Language
+
+* Principal: An entity that is allowed or denied access to a resource![IAM-Principal](.\screenshot\IAM-Principal.PNG)
+
+* Action: Describe the type of access that should be allowed or denied. GETITEM/PUTITEM/RUNINSTANCE![IAM-Action](.\screenshot\IAM-Action.PNG)
+
+* Resource: The object or objects being requested
+
+  ![IAM-Resource](.\screenshot\IAM-Resource.PNG)
+
+* Condition:
+
+![IAM-Policy-Language](.\screenshot\IAM-Policy-Language.PNG)
 
 **重点 / 考点**
 
