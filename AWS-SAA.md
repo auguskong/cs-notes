@@ -282,12 +282,6 @@ Connect to your on-premises network:
 
 \* NAT Gateway / NAT Instance: 只出不进 禁止public network的traffic
 
-
-
-
-
-
-
 #### Direct Connect
 
 
@@ -302,17 +296,44 @@ Connect to your on-premises network:
 
 #### S3 Simple Storage Service
 
+Video:
+
+* [AWS S3 Masterclass](https://www.youtube.com/watch?v=VC0k-noNwOU)
+
 S3: simple web services interface to store and retrieve any amount of data from anywhere on the web.
 
-* safe place to store files
-* It is Object-based storage
+**S3 Concept**
 
-* The data is spread across multiple devices and facilities
-* S3 is a universal namespace. must be unique globally -> web address
+* Bucket: containers for objects stored in S3
+  * organize the S3 namespace at the highest level
+  * identify the account responsible for charges
+  * access control
+  * serve as the unit of aggregation for usage reporting
+* Object: Fundamental entities stored in Amazon S3, consist of data & metadata
+  * metadata: a set of name-value pairs that describe the object
+  * object is uniquely identified within a bucket by a key(name) and a version ID
+* Key: Unique identifier for an object within a bucket. every object in a bucket has exactly one key. Combination of a bucket, key & version ID uniquely identify each object
+* Region: The geographical region where Amazon S3 will store the buckets that you create. optimise latency, minimise costs, or address regulatory requirements
 
-* Object based
 
-* Key: name of the object
+
+#### S3 Fundamentals
+
+* A web store, not a file system
+
+* highly scalable & durable
+
+* access via apis  check API reference
+
+  ![S3-CLI-access](.\screenshot\S3-CLI-access.PNG)
+
+**Namespaces**
+
+Globally Unique: Bucket Name + Object Name(key) 
+
+S3 is a universal namespace. must be unique globally -> web address
+
+Throughput Optimisation: S3 automatically partitions based upon key prefix
 
 * Value: data and is made up of a sequence of bytes
 
@@ -324,15 +345,41 @@ S3: simple web services interface to store and retrieve any amount of data from 
 
 * Access Control Lists
 
-* Consistency Model:
-
-* Read After Write for PUTS of new Objects
+* 
 
 * Eventual Consistency: overwrites PUTS and DELETES
 
 
 
-S3 Storage Class:
+**Access Control**
+
+Policies/ACL & IAM
+
+IAM policy: role, user & group level
+
+![S3-IAM-Policy](.\screenshot\S3-IAM-Policy.PNG)
+
+
+
+Bucket Policy: bucket level
+
+
+
+![S3-Bucket-Policy](.\screenshot\S3-Bucket-Policy.PNG)
+
+
+
+ACLs: grant permissions to other AWS accounts
+
+
+
+![S3-ACL](.\screenshot\S3-ACL.PNG)
+
+IAM Policy vs. Bucket Policy vs. ACLs
+
+![S3-Access-Control](.\screenshot\S3-Access-Control.PNG)
+
+S3 Storage Class: specify the storage class of an object when uploading or cre
 
 * S3 Standard
 
@@ -352,11 +399,23 @@ S3 Storage Class:
 
 
 
-S3 Encryption:
+S3 Encryption & Other Security Features:
 
 * Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
 
 * Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
+
+
+
+Versioning & Cross-Region Replication
+
+
+
+Lifecycle Rules
+
+
+
+Website Hosting
 
 
 
