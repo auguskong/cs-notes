@@ -131,20 +131,6 @@ launch configuration vs. launch template
 
 
 
-#### Security
-
-##### 
-
-
-
-##### IAM Roles
-
-##### NAT Devices
-
-
-
-#### Storage
-
 这里是指的在instance内进行的 storage 不是在S3这种外部服务中的storage
 
 \* Root Device Volumes: contains the image used to boot the instance
@@ -154,6 +140,10 @@ launch configuration vs. launch template
 \* Amazon EBS-backed instance: 会保留在EBS中
 
 
+
+
+
+### Lambda 
 
 
 
@@ -282,11 +272,7 @@ Connect to your on-premises network:
 
 \* NAT Gateway / NAT Instance: 只出不进 禁止public network的traffic
 
-#### Direct Connect
 
-
-
-#### Route 53
 
 
 
@@ -302,11 +288,85 @@ AWS Domain Name System (DNS) web service.
 * Route internet traffic to the resources for your domain
 * Check the health of your resources
 
-### Storage
 
 
 
-#### S3 Simple Storage Service
+
+### Elastic Load Balancing
+
+Video:
+
+*  [AWS Elastic Load Balancing Deep Dive](https://www.youtube.com/watch?v=VIgAT7vjol8)
+
+
+
+distributes incoming application traffic across multiple targets, such as EC2 instances, containers, IP addresses.
+
+![ELB-Load-Balance](./screenshot/ELB-Load-Balance.png)
+
+
+
+
+
+两种不同的Load Balancer: 
+
+* Layer 4(Network Layer)
+
+  * TCP / UDP
+  * Incoming client connection bound to server connection
+  * No header modification
+  * Source IP is preserved in the header or proxy protocol prepends source and destination IP and ports to request
+
+* Layer 7(Application Layer)
+
+  * HTTP / HTTPS
+  * Connection terminated at the load balancer and pooled to the server
+  * Headers may be modified
+  * `X-Forward-For` header contains client IP address
+
+  
+
+![ELB-Load Balancing Family](./screenshot/ELB-Load Balancing Family.png)
+
+
+
+
+
+Application Load Balancer
+
+* content-based routing: path-based routing / hostname based routing
+* support for microservices and container-based applications
+
+
+
+Network Load Balancer
+
+* connection-based: connection-based load balancing TCP protocol
+* ideal for applications with long running connections
+
+
+
+Static IP
+
+Automatically gets assigned a single IP per 
+
+
+
+Application Load Balancer vs. Network Load Balancer: 
+
+![ELB-ALB-vs-NLB](./screenshot/ELB-ALB-vs-NLB.png)
+
+
+
+
+
+## Storage
+
+
+
+### S3 Simple Storage Service
+
+
 
 Video:
 
@@ -336,11 +396,7 @@ Step by step: DNS for a basid website
 4. Delegate to Route 53: delegate是什么意思? 
 5. 
 
-## Storage
 
-
-
-### S3 Simple Storage Service
 
 
 #### S3 Fundamentals
@@ -451,7 +507,7 @@ Website Hosting
 
 
 
-#### EBS
+### EBS
 
 [Deep Dive on Amazon EBS](https://www.youtube.com/watch?v=wsMWANWNoqQ)
 
@@ -502,13 +558,13 @@ Different Type
 
 
 
-Burst 
+Burst: 
 
 
 
 
 
-#### EFS
+### EFS
 
 [Deep Dive on EFS](https://www.youtube.com/watch?v=4FQvJ2q6_oA)
 
@@ -516,13 +572,80 @@ Burst
 
 
 
-### Application Management
-
-
-
-
-
 ## Security and Identity
+
+
+
+### Encryption Service
+
+
+
+KMS
+
+Video
+
+* [AWS re:Invent 2017: A Deep Dive into AWS Encryption Services](https://www.youtube.com/watch?v=gTZgxsCTfbk)
+
+
+
+What everyone means:
+
+
+
+* Minimize unauthorized physical access to data
+  * Data in transport
+    * On the wire
+    * On disk on a truck
+  * Data at rest
+    * Datacenter physical security
+    * Encryption - Block, file, directory, file system, full disk
+  * Data in use
+* Minimize unauthorized logical access to data
+  * Data in transport
+    * Networking access controls(Security Groups, VPC)
+    * Encryption on the wire - TLS, IPsec
+  * Data at rest
+    * Access controls on data resource
+    * Encryption - Block, file, directory, file system, full disk
+  * Data in use
+    * Access controls to prevent unauthorized memory reads
+* Confidentiality, Integrity, Availability
+
+
+
+Control Access
+
+* IT Security: Manage key access policy
+* Software Developer: Use Keys to protect data
+* Compliance: Verify configuration and historical access
+
+
+
+Key 会有不同的level 
+
+
+
+
+
+Data-at-rest encryption 
+
+* Client-side encryption
+  * 
+* Server-side encryption
+
+
+
+### AWS Key Management Service
+
+### AWS Certificate Manager
+
+* Key pair and Certificate Signing Request generation
+* Encryption and secure storage of private keys
+* Managed renewal and deployment
+
+
+
+
 
 ### IAM
 
