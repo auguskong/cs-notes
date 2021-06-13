@@ -390,8 +390,6 @@ def max_subseq(n, t):
   * Sequence Processing
   * Sequence Abstraction
 
-
-
 ```python
 >>> [2, 7] + digits * 2
 [2, 7, 1, 8, 2, 8, 1, 8, 2, 8]
@@ -402,6 +400,80 @@ for <name> in <expression>:
     <suite>
 <expression> 必须yield an iterable value
 ```
+
+
+
+sprout_leaves
+
+没有加到原来的t上 应该是local 和 global 的区别
+
+可变对象和不可变对象在传递值的时候会有区别
+
+可变对象使用引用传递 直接修改相同的地址上的
+
+```python
+
+if is_leaf(t):
+    for i in range(len(leaves)):
+        # 这里如果直接用leaves 来进行操作的话 会导致tree()的嵌套 [2,5] [[2], [5]] [[[2]],[[5]]] 因为都是作用在同一个list leaves上的
+        leaves[i] = tree(leaves[i])
+        t = tree(label(t), leaves)
+        return t
+```
+
+
+
+https://docs.python.org/3/faq/programming.html
+
+
+
+## Lab 6
+
+### Q1: Make Adder Increasing
+
+如何确定adder被call了几次呢?  肯定是要用一个count变量来记录的
+
+count需要使用non local 这样才能跳出限制看到adder
+
+每一次被call直接加到a上面就行了 不需要另外使用一个count变量来记录
+
+```python
+def make_adder_inc(a):
+    """
+    >>> adder1 = make_adder_inc(5)
+    >>> adder2 = make_adder_inc(6)
+    >>> adder1(2)
+    7
+    >>> adder1(2) # 5 + 2 + 1
+    8
+    >>> adder1(10) # 5 + 10 + 2
+    17
+    >>> [adder1(x) for x in [1, 2, 3]]
+    [9, 11, 13]
+    >>> adder2(5)
+    11
+    """
+    "*** YOUR CODE HERE ***"
+    def adder(x):
+        nonlocal a
+        res = a + x
+        a += 1
+        return res
+
+    return adder
+```
+
+
+
+### Q2: Next Fibonacci
+
+make_fib() 没有给出参数n 怎么声明nonlocal 变量？ 
+
+`SyntaxError: no binding for nonlocal 'n' found`
+
+`SyntaxError: name 'n' is parameter and nonlocal`
+
+直接用两个变量来进行操作 不要用function call
 
 # Project
 
