@@ -288,19 +288,35 @@ Connect to your on-premises network:
 
 
 
-#### Direct Connect
+### Route 53
 
 
 
-#### Route 53
+Video: [AWS re:Invent 2016: DNS Demystified: Amazon Route 53, featuring Warner Bros](https://www.youtube.com/watch?v=AAq-DDbFiIE)
+
+AWS Domain Name System (DNS) web service. 
+
+* Register domain names
+* Route internet traffic to the resources for your domain
+* Check the health of your resources
 
 
 
-### Storage
+
+
+Step by step: DNS for a basid website
+
+1. Register a domain name
+2. Create a hosted zone
+3. Create DNS records in your hosted zone
+4. Delegate to Route 53: delegate是什么意思? 
+5. 
+
+## Storage
 
 
 
-#### S3 Simple Storage Service
+### S3 Simple Storage Service
 
 S3: simple web services interface to store and retrieve any amount of data from anywhere on the web.
 
@@ -361,6 +377,75 @@ S3 Encryption:
 
 
 ### Database
+
+ 
+
+
+
+#### EBS
+
+[Deep Dive on Amazon EBS](https://www.youtube.com/watch?v=wsMWANWNoqQ)
+
+
+
+Select Volume
+
+![EBS-Use-Case](./screenshot/EBS-Use-Case.png)
+
+Database: SSD
+
+* Typically hgh performane requirements
+
+* Mostly random I/O
+
+* Journal is sequential
+
+* Highly workload dependent
+
+  
+
+Media: Throughput Optimized HDD
+
+* Typically high throughput requirements
+* Mostly sequential I/O
+* Sustained I/O
+
+
+
+File: Cold HDD
+
+* Typically low throughput requirements
+* Bursty workloads
+* Cost sensitive
+
+ 
+
+Different Type
+
+* General Purpose SSD
+* Provisioned IOPS SSD
+* Throughput Optimized HDD
+* Cold HDD
+
+![EBS-Volume](./screenshot/EBS-Volume.png)
+
+
+
+
+
+Burst 
+
+
+
+
+
+#### EFS
+
+[Deep Dive on EFS](https://www.youtube.com/watch?v=4FQvJ2q6_oA)
+
+
+
+
 
 ### Application Management
 
@@ -473,15 +558,155 @@ SSL encryption: encrypt data when in-transit
 
 
 
+## Compliance
+
+### CloudWatch
+
+
+
+Why monitor? 
+
+
+
+* Customer Experience
+
+* Performance & Cost: How are many changes impacting overall performance
+
+* Trends: Do I need to scale? 
+* Troubleshooting & Remediation
+* Learning & Improvement: Can I detect or prevent this problem in the future ? 
+
+ 
+
+Video:
+
+* [AWS re:Invent2015: Log, Monitor and Analyze your IT with Amazon CloudWatch ](https://www.youtube.com/watch?v=ZaOR-ybLJF0)
+
+**名词解释**
+
+![CloudWatch-Console](./screenshot/CloudWatch-Console.png)
+
+
+
+
+
+Access Log
+
+Amazon CloudWatch Logs
+
+Monitor and alert
+
+Centralized access
+
+Archive
+
+
+
+
+
+
+
+**重点 / 考点**
+
+
+
+
+
+
+
+
+
+### CloudTrail
+
+
+
+Video:
+
+* [AWS re:Invent 2015 | (SEC318) AWS CloudTrail Deep Dive](https://www.youtube.com/watch?v=t0e-mz_I2OU)
+* 
+
+**名词解释**
+
+* API / non-API action
+* management events(control plane operations): operations that a principal executes(or attempts to execute) against an AWS resource.
+* data events: 
+
+
+
+
+
+recoding API calls
+
+* store / archive
+* troubleshoot
+* monitor & alarm
+
+
+
+Use Cases
+
+* IT and security admin can perform security analysis
+* IT and DevOps can track changes to AWS resources
+* DevOps troubleshoot operational issues
+* IT Auditors can use log files as a compliance aid
+
+
+
+CloudTrail event can answer:
+
+* Who made the API call?
+* When was the API call made? 
+* What was the API call ?
+* Which resources were acted up on in the API call?
+* Where was the API call made from and made to?
+
+![CloudTrail-Event](./screenshot/CloudTrail-Event.png)
+
+
+
+
+
+Encrypt CloudTrail log files using SSE-KMS 
+
+![CloudTrail-KMS-Encryption](./screenshot/CloudTrail-KMS-Encryption.png)
+
+
+
+
+
+CloudTrail + CloudWatch + SNS 可以根据CloudTrail 来发送notification 邮件
+
+**重点 / 考点**
+
 
 
 ## Application Integration
+
+
+
+Message
+
+
+
+Customer Use Case - Amazon Fresh
+
+
+
+Product selection portal
+
+
+
+[AWS re:Invent 2018: Choosing the Right Messaging Service for Your Distributed App](https://www.youtube.com/watch?v=4-JmX6MIDDI&t=1644s)
 
 ### SNS
 
 **名词解释**
 
 **重点 / 考点**
+
+
+
+
 
 ### SQS
 
@@ -493,6 +718,24 @@ SSL encryption: encrypt data when in-transit
 **重点 / 考点**
 
 
+
+
+
+
+
+invisible timeout: 在consumer 进行consume的过程中 可能会出现失败 在处理时会标记为不可见 来避免被其他的consumer进行处理 如果成功处理 之后delete 如果处理过程中失败了 再将不可见标记为可见状态
+
+
+
+FIFO: 进行分组 不同的Group 在consumer端只能被一个consumer 进行处理
+
+
+
+Kinesis Data Streams: 
+
+
+
+![SQS:SNS:Kinesis-Comparison](./screenshot/SQS:SNS:Kinesis-Comparison.png)
 
 
 
@@ -622,27 +865,7 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
 
 
 
-\## Compliance
 
-\### CloudWatch
-
-**名词解释**
-
-**重点 / 考点**
-
-\* Memory Utilization 不是default的, 需要手动set up 【在console里面确认】
-
-\### CloudTrail
-
-**名词解释**
-
-**重点 / 考点**
-
-【问题】
-
-KMS: Key Management Service
-
-IAM
 
 
 
@@ -662,7 +885,7 @@ at rest: while it is stored on disks in Amazon S3 data centers
 
 [aws-doc-example-bucket-policies]( https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html)
 
-![d8f058a890e5e90e6829d6742305a774.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p280)
+
 
 read-after-write consistency moPUT: PUT + DELETE
 
@@ -672,11 +895,11 @@ Versioning: 什么的version S3 bucket的version? multiple versions of the same 
 
 \* Lifecycle management
 
-![d10a689da22c97ddd365f769d4296588.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p277)
+
 
 \* Cross-region replication (set in replication rule Destination)
 
-![940baaf4e1beca7aef77672a128667b4.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p278)
+
 
 \* S3 bucket properties
 
@@ -708,6 +931,12 @@ read-after-write consistency: ?? 这是什么一致性
 
 不同操作的consistency model是不同的 需要进行一个 ??
 
+
+
+
+
+
+
 **重点 / 考点**
 
 Athena: query service to analyze data directly in S3 using standard SQL
@@ -722,13 +951,13 @@ Hard disk drives (HDD) — Optimized for **large streaming workloads** where the
 
 \* SSD
 
-![de468441f924dfa3de0b90ead98d7ba9.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p267)
+
 
 small data-analytical boot volume
 
 \* HDD
 
-![6491e5a424a29f195ca0e0564897bee2.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p268)
+
 
 large and sequential I/O
 
@@ -761,8 +990,6 @@ https://stackoverflow.com/questions/21900185/what-are-oltp-and-olap-what-is-the-
 EFS 的life cycle policy 最多只有90天
 
 Mount Target
-
-\#### Compare
 
 
 

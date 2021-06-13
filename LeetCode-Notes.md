@@ -1307,6 +1307,8 @@ https://leetcode.com/problems/regular-expression-matching/
 
 
 
+
+
 如何处理前面的字符 需要保存记录一下前一个字符
 
 
@@ -1420,5 +1422,107 @@ class Solution:
             left -= 1
             right += 1
         return s[left + 1: right]
+```
+
+
+
+
+
+6.12
+
+
+
+N Queens
+
+
+
+需要单独开对角线的数组来帮助search 
+
+
+
+下标的操作技巧是什么 
+
+需要打印出来棋盘
+
+如果找到了 将当前位置的`.` 改成`Q`
+
+
+
+放 和 不放 是两条不同的搜索路径 
+
+恢复现场是 
+
+直接将一整行都打印出来  如何再换到下一行呢? 
+
+
+
+string 才能直接用 `+` 进行拼接
+
+```python
+class Solution:
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        board = []
+        loc = [-1] * n 
+        self.dfs(0, loc, board, [], n)
+        return board
+    
+    def dfs(self, curr, loc, board, path, n):
+        if curr == n:
+            board.append(path)
+            return
+
+        for i in range(n):
+            loc[curr] = i
+            if self.valid(curr, loc):
+                tmp = '.'*n
+                self.dfs(curr + 1, loc, board, path + [tmp[:i]+'Q'+tmp[i+1:]], n)
+    
+    def valid(self, curr, loc):
+        for i in range(curr):
+            if abs(loc[i] - loc[curr]) == curr - i or loc[curr] == loc[i]:
+                return False
+        return True
+
+```
+
+
+
+
+
+N-Queens II
+
+返回能够得到的方案数量
+
+全局变量需要用`self.res` 来进行声明
+
+全局变量是如何进行声明的? 
+
+global 关键字怎么用? 
+
+
+
+```python
+class Solution:
+    def totalNQueens(self, n: int) -> int:
+        loc = [-1] * n 
+        self.res = 0
+        self.dfs(0, loc, n)
+        return self.res
+    
+    def dfs(self, curr, loc, n):
+        if curr == n:
+            self.res += 1
+            return
+
+        for i in range(n):
+            loc[curr] = i
+            if self.valid(curr, loc):
+                self.dfs(curr + 1, loc, n)
+    
+    def valid(self, curr, loc):
+        for i in range(curr):
+            if abs(loc[i] - loc[curr]) == curr - i or loc[curr] == loc[i]:
+                return False
+        return True
 ```
 
