@@ -2,19 +2,69 @@
 
 
 
+## Global Infrastructure
+
+Region
+
+* Region 之间默认是隔离的 除非给予特定的permission
+* Region 可以由你来决定 
+* 每个Region
+
+Select a Region
+
+* Compliance with data governance and legal requirements
+* Proximity to your customers
+* Available services within a Region: 某个Region可能还不支持新的Service
+* Pricing: 相同Service在不同Region可能价格不同
+
+Availability Zones: a single data center or a group of data centers within a Region. Availability Zones are located tens of miles apart from each other. 
+
+
+
+Edge Locations
+
+An **edge location** is a site that Amazon CloudFront uses to store cached copies of your content closer to your customers for faster delivery. 可以和Region分开部署
+
+
+
+Route 53: Amazon DNS
+
+
+
+How to provision AWS resources
+
+* AWS Management console : 登录浏览器用UI操作
+* AWS Command Line Interface: 命令行 + 脚本script
+* Software Development Kits(SDK): 软件包 写Program
+
+
+
+**AWS CloudFormation**
+
+With **AWS CloudFormation**, you can treat your infrastructure as code. This means that you can build an environment by writing lines of code instead of using the AWS Management Console to individually provision resources.
+
+
+
+**Additional resources**
+
+- [Regions and Availability Zones](https://aws.amazon.com/about-aws/global-infrastructure/regions_az)
+- [Global Infrastructure](https://aws.amazon.com/about-aws/global-infrastructure/)
+- [AWS Networking and Content Delivery Blog](https://aws.amazon.com/blogs/networking-and-content-delivery/)
+- [Tools to Build on AWS](https://aws.amazon.com/tools/)
+
+
+
 ## Compute
 
 
 
 ### Elastic Compute Cloud(EC2)
 
-
-
 名词解释: 
 
 * Launch configuration:
 
-* Autoscaling group:
+* Auto Scaling group:
 
 * Load balancer: 只能在同一个region 中进行balance
 
@@ -28,8 +78,6 @@
 
 * Spot EC2 instance: 可能会被随时interrupt stop/terminate 可以选Spot Block来限定一个确定时间
 
-
-
 * Dedicated Hosts:
 
 * Reserved instance: 签订长期合约 1年/3年
@@ -40,41 +88,42 @@
 
 \* AMI(Amazon Machine Image): reusable template include OS + additional installations
 
-
-
-#### **EC2 Instance**
-
 * Running
+
 * Stop: 关机 但是EBS还attach 类似Sleep 状态? 
+
 * Terminate: 停止使用整个instance, root device volume is deleted
 
-EC2 整合 
+  
 
-ALB
+**EC2 整合其他的AWS Service**
 
-VPC
+* ELB(Elastic Load Balancing): ELB 将Traffic route 到不同的EC2 instance上
 
-Auto Scaling
-
-Security 
-
-
-
-每一个都需要同时考虑 4个Pillar
+* VPC(Virtual Private Cloud)
 
 
 
 Performance 不同资源进行协同 Divide and Conquer ? 
 
+**EC2 Pricing**
+
+* **On-demand model:** 按照小时计价 最灵活价格也最高 ideal for short-term, irregular workloads that cannot be interrupted. No upfront costs or minimum contracts apply. The instances run continuously until you stop them, and you pay for only the compute time you use.
+* **Reserve instance:** 按照On-demand来使用 但是长租会有优惠 12个月以上 可以签合同锁定 **Reserved Instances** are a billing discount applied to the use of On-Demand Instances in your account. You can purchase Standard Reserved and Convertible Reserved Instances for a 1-year or 3-year term, and Scheduled Reserved Instances for a 1-year term.
+* **Amazon EC2 Savings Plans:** 较长时间段有一个确定的总使用量 AWS offers Savings Plans for several compute services, including Amazon EC2. **Amazon EC2 Savings Plans** enable you to reduce your compute costs by committing to a consistent amount of compute usage for a 1-year or 3-year term.
+* **Spot Instances:** 竞价 对于能够接受随时中断的job 价格最低  ideal for workloads with flexible start and end times, or that can withstand interruptions. Spot Instances use unused Amazon EC2 computing capacity and offer you cost savings at up to 90% off of On-Demand prices.
+* **Dedicated Hosts**: are physical servers with Amazon EC2 instance capacity that is fully dedicated to your use. **EC2 Scaling**
 
 
-Security 
 
+**EC2 Scaling**
 
+* Dynamic scaling: responds to changing demand
+* Predictive scaling: automatically schedules the right number of Amazon EC2 instances based on predicted demand
 
-#### EC2 Auto Scaling
+* Auto Scaling group
 
-#### 
+![EC2-Auto-Scaling-Group](.\screenshot\EC2-Auto-Scaling-Group.PNG)
 
 Auto 是按照已经给定过得configuration / template 来进行设定的
 
@@ -97,41 +146,26 @@ Auto 是按照已经给定过得configuration / template 来进行设定的
 
 
 
-launch configuration vs. launch template
-
-区别是什么？
+launch configuration vs. launch template 区别是什么？
 
 
 
-#### **Networking**
+**Placement Group**
 
-##### **Placement Groups**
+* **Cluster**: launch each associated instance into a single availability zone within dlose physical proximity to each other. low latency network 适用于performance要求高 对容错要求低的application
 
-* Cluster: launch each associated instance into a single availability zone within dlose physical proximity to each other. low latency network 适用于performance要求高 对容错要求低的application
+* **Spread**: 
 
-* ![image-20210522220744093](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220744093.png)
+* **Partition**: 增加硬件容错能力 每个partition属于相同的rack 有当杜的 power source 和 network, 但是partition之间不共享rack 可以隔离hardware failure
 
-* Spread: 
-
-* ![image-20210522220720385](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220720385.png)
-
-* Partition: 增加硬件容错能力 每个partition属于相同的rack 有当杜的 power source 和 network, 但是partition之间不共享rack 可以隔离hardware failure
-
-*  ![image-20210522220732759](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210522220732759.png)
-
-  ##### **IP address**
+  
 
 
 
-#### **Price Model**
 
-* on-demand model: 按照小时计价 最灵活价格也最高
-* reserve instance: 12个月以上 可以签合同锁定
-* spot market: 竞价 对于能够接受随时中断的job 价格最低
+**AWS Fargate** is a serverless compute engine for containers.
 
 
-
-这里是指的在instance内进行的 storage 不是在S3这种外部服务中的storage
 
 \* Root Device Volumes: contains the image used to boot the instance
 
@@ -143,7 +177,37 @@ launch configuration vs. launch template
 
 
 
+
+
 ### Lambda 
+
+[**AWS Lambda**](https://aws.amazon.com/lambda) is a service that lets you run code without needing to provision or manage servers. 
+
+
+
+![Lambda-How-it-works](.\screenshot\Lambda-How-it-works.PNG)
+
+Serverless Computing: 
+
+The term “serverless” means that your code runs on servers, but you do not need to provision or manage these servers. With serverless computing, you can focus more on innovating new products and features instead of maintaining servers.
+
+Another benefit of serverless computing is the flexibility to scale serverless applications automatically. Serverless computing can adjust the applications' capacity by modifying the units of consumptions
+
+Source 发送 Event 来进行计算 Serverless
+
+**名词解释**
+
+* Lambda@Edge
+* Lambda Destination
+
+### Additional resources
+
+- [Compute on AWS](https://aws.amazon.com/products/compute)
+- [AWS Compute Blog](https://aws.amazon.com/blogs/compute/)
+- [AWS Compute Services](https://docs.aws.amazon.com/whitepapers/latest/aws-overview/compute-services.html)
+- [Category Deep Dive: Serverless](https://aws.amazon.com/getting-started/deep-dive-serverless/)
+
+
 
 
 
@@ -151,38 +215,35 @@ launch configuration vs. launch template
 
 ## Networking
 
+Video:
+
+* [AWS Networking Fundamentals](https://www.youtube.com/watch?v=hiKPPy584Mg)
+
+
+
 
 
 ### VPC: Virtual Private Cloud
 
+VPC: A networking service that you can use to establish boundaries around your AWS resources
 
-
-AWS Talk:
-
-[AWS Networking Fundamentals](https://www.youtube.com/watch?v=hiKPPy584Mg)
-
-
-
-
+Amazon VPC enables you to provision an isolated section of the AWS Cloud. In this isolated section, you can launch resources in a virtual network that you define. Within a virtual private cloud (VPC), you can organize your resources into subnets. A **subnet** is a section of a VPC that can contain resources such as Amazon EC2 instances.
 
 **名词解释**
 
 * Route Table: contains a set of rules, called routes, that are used to determine where network traffic is directed
-* Subnet: a range of IP addresses in your VPC. add AWS resources into a specified subnet.
-* Public subnet: resources that must be connected to the internet
-* Private subnet: for resources that won't be connected to the internet.
-* Internet gateway: instaces <=> public internet
+* **Subnet**: a range of IP addresses in your VPC. add AWS resources into a specified subnet. In a VPC, **subnets** are separate areas that are used to group together resources. 用来进行隔离
+  * Public subnet: contain resources that need to be accessible by the public, such as an online store’s website.
+  * Private subnet: contain resources that should be accessible only through your private network, such as a database that contains customers’ personal information and order histories. 
+* Internet gateway: instances <=> public internet
 * NAT gateways: private IP <=> NAT <=> public internet
 * Egress-only internet gateways: IPv6 traffic
 * Elastic Network Interface(ENI): virtual network interface you can attach to an instance in VPC
 * Elastic IP address: a reserved public IP address you can assign to any EC2 instance in a particular region
-* Security Group(instance level): a virtual firewall control inbound and outbound traffic for your **instances**
-* Network Access Control List(NACL): **subnet** level additional firewall
+* Security Group: a virtual firewall control inbound and outbound traffic for your **instances**
+* Network Access Control Lists(ACLs): a virtual firewall that controls inbound and outbound traffic at the **subnet** level. default: It is stateless and allows all inbound and outbound traffic.
 * NAT: Network Address Translation 在public IP 和 private IP 之间做切换来解决公共IP数量不足的问题
 * VPC Endpoint: 用来和其他不在VPC内部的AWS建立connection, 比如S3, DynamoDB
-* Interface Endpoints
-* Gateway Endpoints
-
 * DHCP server: assign a computer an IP address + Subnet mask + Default gateway + DNS server 否则用人工添加会很麻烦
 
 * VPC Flow Logs: capture information about the **IP traffic** going to and from network interfaces in your VPC
@@ -201,28 +262,51 @@ AWS Talk:
 
 \* need to attach an internet gateway and associating an Elastic IP address with the instance
 
+
+
+Networking Security:
+
+* Network hardening
+* Application security
+* User identity
+* Authentication and authorization
+* Distributes denial of service prevention
+* Data integrity
+* Encryption
+
+Subnet is used to control access to the gateways. public subnets have access to the internet gateway, the private subnets do not.  control traffic permissions
+
+
+
+Network ACL
+
+![VPC-Network-ACL](.\screenshot\VPC-Network-ACL.PNG)
+
 **Security Group vs. Network ACL:**
-
-
-
-
 
 | Security Group                                               | Network ACL                                                  |
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | Instance Level                                               | Subnet Level                                                 |
-| Stateful: return traffic is automatically allowed            | Stateless: return traffic must be explicitly allowed by the rules |
+| Stateful: return traffic is automatically allowed 被允许进来的packet 默认能够出去 | Stateless: return traffic must be explicitly allowed by the rules 每一个Packet 都需要被check |
 | Support allow rules                                          | Support allow rules + deny rules                             |
 | All rules evaluated before deciding whether to allow traffic | Process rules in number order when deciding whether to allow traffic (有冲突的时候取number小的/更靠前的) |
+| default: They are stateful and deny all inbound traffic by default. | default: They are stateless and allow all inbound traffic by default. |
 
 
 
+**Internet gateway**:  allow public traffic from the internet to access your VPC. You can think of an internet gateway as being similar to a doorway that customers use to enter the coffee shop. Without an internet gateway, no one can access the resources within your VPC.
 
+![VPC-Internet-Gateway](.\screenshot\VPC-Internet-Gateway.PNG)
 
-**Security Group**起到firewall的作用 By default, a security group will deny all incoming traffic while permitting all outgoing traffic. 只出不进 通过policy rule 来进行设定
+**Virtual private gateway**: 对于Internet上的traffic 进行识别和限制 A virtual private gateway enables you to establish a virtual private network (VPN) connection between your VPC and a private network, such as an on-premises data center or internal corporate network. A virtual private gateway allows traffic into the VPC only if it is coming from an approved network.
 
+![VPC-Virtual-Private-Gateway](.\screenshot\VPC-Virtual-Private-Gateway.PNG)
 
+**Direct Connect**: 使用AWS的专用网络(a dedicated connection) 更高的私密性 更低的延迟 The private connection that AWS Direct Connect provides helps you to reduce network costs and increase the amount of bandwidth that can travel through your network.
 
+![VPC-Direct-Connect](.\screenshot\VPC-Direct-Connect.PNG)
 
+![VPC-Direct-Connect-2](.\screenshot\VPC-Direct-Connect-2.PNG)
 
 Flow Logs:
 
@@ -233,19 +317,15 @@ Flow Logs:
 
 
 
-![image-20210607225605956](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210607225605956.png)
-
-
-
-
-
-
-
 DNS resolution: Use Amazon DNS server 进行域名解析
 
 DNS hostnames: Have EC2 auto-assign DNS host names to instances 进行IP地址替换
 
  
+
+
+
+* 
 
 
 
@@ -260,8 +340,6 @@ Connect to other VPCs
 
 Connect to your on-premises network:
 
-* 
-
 
 
 
@@ -272,15 +350,13 @@ Connect to your on-premises network:
 
 \* NAT Gateway / NAT Instance: 只出不进 禁止public network的traffic
 
-
-
-
-
 ### Route 53
 
+ *a DNS web service*
 
+Video:
 
-Video: [AWS re:Invent 2016: DNS Demystified: Amazon Route 53, featuring Warner Bros](https://www.youtube.com/watch?v=AAq-DDbFiIE)
+*  [AWS re:Invent 2016: DNS Demystified: Amazon Route 53, featuring Warner Bros](https://www.youtube.com/watch?v=AAq-DDbFiIE)
 
 AWS Domain Name System (DNS) web service. 
 
@@ -289,6 +365,8 @@ AWS Domain Name System (DNS) web service.
 * Check the health of your resources
 
 
+
+Who should be allowed to communicate with each other? 
 
 
 
@@ -303,10 +381,6 @@ Video:
 distributes incoming application traffic across multiple targets, such as EC2 instances, containers, IP addresses.
 
 ![ELB-Load-Balance](./screenshot/ELB-Load-Balance.png)
-
-
-
-
 
 两种不同的Load Balancer: 
 
@@ -358,6 +432,16 @@ Application Load Balancer vs. Network Load Balancer:
 
 
 
+Additional resources
+
+- [Networking and Content Delivery on AWS](https://aws.amazon.com/products/networking)
+- [AWS Networking & Content Delivery Blog](https://aws.amazon.com/blogs/networking-and-content-delivery/)
+- [Amazon Virtual Private Cloud](https://aws.amazon.com/vpc)
+- [What is Amazon VPC?](https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html)
+- [How Amazon VPC works](https://docs.aws.amazon.com/vpc/latest/userguide/how-it-works.html)
+
+
+
 
 
 ## Storage
@@ -398,8 +482,7 @@ Step by step: DNS for a basid website
 
 
 
-
-#### S3 Fundamentals
+**S3 fundamentals**
 
 * A web store, not a file system
 
@@ -501,6 +584,87 @@ Website Hosting
 
 
 
+### DynamoDB
+
+
+
+Video
+
+* [AWS re:Invent 2018: Amazon DynamoDB Deep Dive: Advanced Design Patterns for DynamoDB](https://www.youtube.com/watch?v=HaEPXoXVf2k)
+
+SQL vs. NoSQL
+
+| SQL                   | NoSQL                     |
+| --------------------- | ------------------------- |
+| Optimized for storage | Optimized for compute     |
+| Normalized/relational | Denormalized/hierarchical |
+| Ad hoc queries        | Instantiated views        |
+| Scale vertically      | Scale horizontally        |
+| Good for OLAP         | Built for OLTP at scale   |
+
+
+
+* AWS fully-managed
+* Scalable
+* No-SQL(Key-Value pair)
+* Access Control: attibute level / item level / table level
+*  Event driven programming
+
+* 
+
+**名词解释**
+
+* DynamoDB Streams: captures a time-ordered sequence of item-level modifications in any DynamoDB table and stores this information in a log for up to 24 hours. Applications can access this log and view the data items as they appeared before and after they were modified, in near-real time.
+* Table![DynamoDB-Table](.\screenshot\DynamoDB-Table.PNG)
+* Partition Key:
+  * uniquely identifies an item
+  * used for building an unordered hash index
+  * allows table to be partitioned for scale
+
+![DynamoDB-Partition-Keys](.\screenshot\DynamoDB-Partition-Keys.PNG)
+
+
+
+* Secondary Index
+  * Local Secondary Index(LSI): Alternate sort key attribute, index is local to a partition key
+  * Global Secondary Index(GSI): 
+
+\* DynamoDB Streaming 可以直接trigger Lambda
+
+DynamoDB Stream: stream 是change log for the DynamoDB table 和table 本身是隔离的 不会因为bad code而导致table出问题
+
+Lambda 有一个Invocation Role: define what lambda can see / read off the stream
+
+和一个Execution Role : What Lambda function can do, what AWS service it can access, what permissions it has on those services
+
+Data is relational 
+
+如何在DynamoDB中处理relational data ?
+
+用来做可以scale的Aggregation 操作
+
+
+
+Composite Key:  
+
+
+
+Approach 1: Query Filter 
+
+Approach 2: Composite Key   StatusDate 将Status 和 Date组合成为一个新的Key   Create a hierarchy
+
+Composite Key
+
+在SQL中可以使用Join 操作
+
+尽可能的均匀分隔partition key
+
+access is evenly spread over the key-space
+
+
+
+
+
 ### Database
 
  
@@ -510,6 +674,12 @@ Website Hosting
 ### EBS
 
 [Deep Dive on Amazon EBS](https://www.youtube.com/watch?v=wsMWANWNoqQ)
+
+persistent storage: the storage is independent outside the life span of an EC2 instance.
+
+Solid state drives (SSD) — Optimized for **transactional workloads** involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
+
+Hard disk drives (HDD) — Optimized for **large streaming workloads** where the dominant performance attribute is throughput.
 
 
 
@@ -892,24 +1062,34 @@ Product selection portal
 
 ### SNS
 
+publish/subscribe service
+
+subscriber: web servers, email addresses, AWS Lambda functions, ... 
+
+
+
 **名词解释**
 
-**重点 / 考点**
+
+
+![SNS-Coffee-Bar-Example-1](.\screenshot\SNS-Coffee-Bar-Example-1.PNG)
 
 
 
-
+![SNS-Coffee-Bar-Example-2](.\screenshot\SNS-Coffee-Bar-Example-2.PNG)
 
 ### SQS
+
+message queuing service
 
 **名词解释**
 
 * Long/Short Polling
 * Visibility Timeout
 
-**重点 / 考点**
 
 
+![SQS-Coffee-Bar-Example](.\screenshot\SQS-Coffee-Bar-Example.PNG)
 
 
 
@@ -927,11 +1107,11 @@ Kinesis Data Streams:
 
 
 
-![SQS:SNS:Kinesis-Comparison](./screenshot/SQS:SNS:Kinesis-Comparison.png)
+## Training
 
 
 
-
+* [AWS Cloud Practitioner Essentials](https://www.aws.training/Details/eLearning?id=60697)
 
 ## Case Study
 
@@ -944,14 +1124,6 @@ Netflix on AWS: https://aws.amazon.com/solutions/case-studies/netflix/
 Intuit on AWS: https://aws.amazon.com/solutions/case-studies/Intuit/
 
 
-
-
-
-### Airbnb
-
-
-
-### Netflix
 
 ## 错题整理
 
@@ -973,11 +1145,7 @@ S3 vs. EFS vs. EBS
 
 **重点 / 考点**
 
-### AWS CloudFormation
 
-**名词解释**
-
-**重点 / 考点**
 ### AWS Config 
 **名词解释**
 
@@ -1017,17 +1185,7 @@ S3 vs. EFS vs. EBS
 
 
 
-**名词解释**
 
-* Lambda@Edge
-
-
-
-**重点 / 考点**
-
-\* Lambda Destination
-
-*
 
 
 
@@ -1058,12 +1216,6 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
 
 
 
-
-
-
-
-
-## 
 
 \* Use a customer master key (CMK) stored in AWS Key Management Service (AWS KMS).
 
@@ -1129,25 +1281,7 @@ read-after-write consistency: ?? 这是什么一致性
 
 
 
-**重点 / 考点**
 
-Athena: query service to analyze data directly in S3 using standard SQL
-
-\### EBS (Elastic Block Store)
-
-persistent storage: the storage is independent outside the life span of an EC2 instance.
-
-Solid state drives (SSD) — Optimized for **transactional workloads** involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS.
-
-Hard disk drives (HDD) — Optimized for **large streaming workloads** where the dominant performance attribute is throughput.
-
-\* SSD
-
-
-
-small data-analytical boot volume
-
-\* HDD
 
 
 
@@ -1205,27 +1339,17 @@ Data Sync vs. Storage Gateway vs. Data Migration Service
 
 \* Data Sync: 从本地的on-premise上传到远端AWS上
 
-**重点 / 考点**
+
 
 \* 需要用Hybrid cloud structure的时候考虑用Storage Gateway
 
-\## Database
+
 
 \### DynamoDB
 
-![196978c8b75da818e293e978bf14e0e3.png](evernotecid://1FC78D12-88FB-4FAC-95A1-F7FB5953B0DF/appyinxiangcom/29211871/ENResource/p282)
 
-关键字: AWS fully-managed, scalable, No-SQL(Key-Value pair), highly available
 
-**名词解释**
 
-\* DynamoDB Streams: captures a time-ordered sequence of item-level modifications in any DynamoDB table and stores this information in a log for up to 24 hours. Applications can access this log and view the data items as they appeared before and after they were modified, in near-real time.
-
-默认是Diable的,需要手动Enable
-
-**重点 / 考点**
-
-\* DynamoDB Streaming 可以直接trigger Lambda
 
 \### Relational Database Service (RDS)
 
