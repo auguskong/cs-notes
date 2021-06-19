@@ -4,7 +4,7 @@
 
 ## Global Infrastructure
 
-Region
+Region: A separate geographical location with multiple locations that are isolated from each other
 
 * Region 之间默认是隔离的 除非给予特定的permission
 * Region 可以由你来决定 
@@ -17,7 +17,7 @@ Select a Region
 * Available services within a Region: 某个Region可能还不支持新的Service
 * Pricing: 相同Service在不同Region可能价格不同
 
-Availability Zones: a single data center or a group of data centers within a Region. Availability Zones are located tens of miles apart from each other. 
+Availability Zones: a single data center or a group of data centers within a Region. Availability Zones are located tens of miles apart from each other. **A fully isolated portion of the AWS global infrastructure**.
 
 
 
@@ -169,11 +169,16 @@ launch configuration vs. launch template 区别是什么？
 
 \* Root Device Volumes: contains the image used to boot the instance
 
-\* Instance Store-backed instance: Stop之后就被删除 不存在stop状态 只有Running 和 Terminate
-
-\* Amazon EBS-backed instance: 会保留在EBS中
 
 
+
+
+**Auto Scaling**
+
+* Launch Configuration: specifies EC2 instance size and AMI name
+
+* Auto Scaling Group: specifies min, max, and desired size of the Auto Scaling group
+* Auto Scaling Policy: specifies how much to scale in or scale out
 
 
 
@@ -246,7 +251,7 @@ Amazon VPC enables you to provision an isolated section of the AWS Cloud. In thi
 * VPC Endpoint: 用来和其他不在VPC内部的AWS建立connection, 比如S3, DynamoDB
 * DHCP server: assign a computer an IP address + Subnet mask + Default gateway + DNS server 否则用人工添加会很麻烦
 
-* VPC Flow Logs: capture information about the **IP traffic** going to and from network interfaces in your VPC
+* VPC Flow Logs: capture information about the **IP traffic** going to and from network interfaces in your VPC 不能catch HTTP的404 error
 
 * VPC Peering: connect the different VPCs(between your VPCs, or with a VPC in another AWS account) 两个network之间的instance都可以相互通信
 
@@ -321,12 +326,6 @@ DNS resolution: Use Amazon DNS server 进行域名解析
 
 DNS hostnames: Have EC2 auto-assign DNS host names to instances 进行IP地址替换
 
- 
-
-
-
-* 
-
 
 
 Connect your VPC:
@@ -339,8 +338,6 @@ Connect to other VPCs
 * Transit Gateway: 作为中转链接多个VPC
 
 Connect to your on-premises network:
-
-
 
 
 
@@ -367,6 +364,13 @@ AWS Domain Name System (DNS) web service.
 
 
 Who should be allowed to communicate with each other? 
+
+Step by step: DNS for a basic website
+
+1. Register a domain name
+2. Create a hosted zone
+3. Create DNS records in your hosted zone
+4. Delegate to Route 53: delegate是什么意思? 
 
 
 
@@ -446,11 +450,15 @@ Additional resources
 
 ## Storage
 
+### EC2 Instance Store Volumes
 
+和 EC2 host 绑定
+
+\* Instance Store-backed instance: Stop之后就被删除 因为在ec2 start/stop过程中可能会更换底层的physical host  ec2是virtual host. 只能适用于暂时性存储的data 或者说是可以随意丢弃的数据 比如temporary files, scratch data.
+
+\* Amazon EBS-backed instance: 会保留在EBS中
 
 ### S3 Simple Storage Service
-
-
 
 Video:
 
@@ -458,29 +466,63 @@ Video:
 
 S3: simple web services interface to store and retrieve any amount of data from anywhere on the web.
 
-**S3 Concept**
-
 * Bucket: containers for objects stored in S3
   * organize the S3 namespace at the highest level
   * identify the account responsible for charges
   * access control
   * serve as the unit of aggregation for usage reporting
-* Object: Fundamental entities stored in Amazon S3, consist of data & metadata
-  * metadata: a set of name-value pairs that describe the object
-  * object is uniquely identified within a bucket by a key(name) and a version ID
+* Object: Fundamental entities stored in Amazon S3, consist of data, metadata and a key
+  * data: an image, video, text document or any other type of file
+  * metadata: a set of name-value pairs that describe the object, contains information about what the data is, how it is used, the object size
+  * key(name) and a version ID: uniquely identifier
 * Key: Unique identifier for an object within a bucket. every object in a bucket has exactly one key. Combination of a bucket, key & version ID uniquely identify each object
-* Region: The geographical region where Amazon S3 will store the buckets that you create. optimise latency, minimise costs, or address regulatory requirements
+* Region: The geographical region where Amazon S3 will store the buckets that you create. optimise latency, minimize costs, or address regulatory requirements
 
 
-Step by step: DNS for a basid website
 
-1. Register a domain name
-2. Create a hosted zone
-3. Create DNS records in your hosted zone
-4. Delegate to Route 53: delegate是什么意思? 
-5. 
+**S3 Storage Class**: specify the storage class of an object when uploading 
+
+When selecting an Amazon S3 storage class, consider these two factors:
+
+- How often you plan to retrieve your data
+- How available you need your data to be
+
+根据不同的Storage Use Case 来进行选择
+
+* S3 Standard  11个9 durability, higher cost
+  * Designed for frequently accessed data
+  * Stores data in a minimum of three Availability Zones
+* S3 Standard-Infrequent Access(S3 Standard-IA) : 更便宜 更少的操作频率
+  * Ideal for infrequently accessed data
+  * Similar to S3 Standard but has a lower storage price and higher retrieval price
+* S3 One Zone - IA: 只在一个region内操作 不涉及到多个region间的调用
+  * Stores data in a single Availability Zone
+  * Has a lower storage price than S3 Standard-IA
+* S3 - Intelligent Tiering: 动态调整价格
+  * Ideal for data with unknown or changing access patterns
+  * Requires a small monthly monitoring and automation fee per object
+* S3 Glacier: 
+  * Low-cost storage designed for data archiving
+  * Able to retrieve objects within a few minutes to hours
+* S3 Glacier Deep Archive: 
+  * Lowest-cost object storage class ideal for archiving
+  * Able to retrieve objects within 12 hours
+* S3 URI and Amazon Resource Name(ARN)
+* Reduced Redundancy Storage (RRS) is an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage.
 
 
+
+S3不同class 价格比较 + lifecycle 
+
+![S3-lifecycle-transitions](.\screenshot\S3-lifecycle-transitions.png)
+
+Write once / Read many (WORM) Policy
+
+maximum object size of 5 TB
+
+Version objects
+
+With Amazon ***\*S3 Select\****, you can use simple structured query language (SQL) statements to filter the contents of Amazon S3 objects and retrieve just the subset of data that you need
 
 **S3 fundamentals**
 
@@ -488,7 +530,7 @@ Step by step: DNS for a basid website
 
 * highly scalable & durable
 
-* access via apis  check API reference
+* access via APIs  check API reference
 
   ![S3-CLI-access](.\screenshot\S3-CLI-access.PNG)
 
@@ -498,7 +540,7 @@ Globally Unique: Bucket Name + Object Name(key)
 
 S3 is a universal namespace. must be unique globally -> web address
 
-Throughput Optimisation: S3 automatically partitions based upon key prefix
+Throughput Optimization: S3 automatically partitions based upon key prefix
 
 * Value: data and is made up of a sequence of bytes
 
@@ -510,9 +552,21 @@ Throughput Optimisation: S3 automatically partitions based upon key prefix
 
 * Access Control Lists
 
-* 
-
 * Eventual Consistency: overwrites PUTS and DELETES
+
+  
+
+
+
+S3 access policy
+
+* resource-based policies
+  * bucket policy
+  * access control lists(ACLs)
+* user policies
+  * manage public permissions:  grant read access to your objects to the general public. 
+
+
 
 
 
@@ -532,6 +586,10 @@ Bucket Policy: bucket level
 
 ![S3-Bucket-Policy](.\screenshot\S3-Bucket-Policy.PNG)
 
+By default, all Amazon S3 resources such as buckets, objects, and related subresources are private which means that **only the AWS account holder** (resource owner) that created it has access to the resource. 
+
+
+
 
 
 ACLs: grant permissions to other AWS accounts
@@ -544,31 +602,15 @@ IAM Policy vs. Bucket Policy vs. ACLs
 
 ![S3-Access-Control](.\screenshot\S3-Access-Control.PNG)
 
-S3 Storage Class: specify the storage class of an object when uploading or cre
-
-* S3 Standard
-
-* S3 - IA : 更便宜 更少的操作频率
-
-* S3 One Zone - IA: 只在一个region内操作 不涉及到多个region间的调用
-
-* S3 - Intelligent Tiering: 动态调整价格
-
-* S3 Glacier: for data archiving. retrieval times from mins to hours
-
-* S3 Glacier Deep Archive: 最便宜的 retrieval time of 12 hours
-
-* S3 URI and Amazon Resource Name(ARN)
-
-* Reduced Redundancy Storage (RRS) is an Amazon S3 storage option that enables customers to store noncritical, reproducible data at lower levels of redundancy than Amazon S3’s standard storage.
-
 
 
 S3 Encryption & Other Security Features:
 
-* Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects.
+* Server-Side Encryption – Request Amazon S3 to encrypt your object before saving it on disks in its data centers and then decrypt it when you download the objects. AWS encrypts data on your behalf after it has been received by the service
 
-* Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools.
+* Client-Side Encryption – Encrypt data client-side and upload the encrypted data to Amazon S3. In this case, you manage the encryption process, the encryption keys, and related tools. You encrypt your data before sending it to AWS
+
+
 
 
 
@@ -576,7 +618,7 @@ Versioning & Cross-Region Replication
 
 
 
-Lifecycle Rules
+Lifecycle Policies: 在不同的S3 Tier之间进行切换 前90天在Standard -> 接下来30天SA-IA -> 最后SA Glacier
 
 
 
@@ -647,8 +689,6 @@ Data is relational
 
 Composite Key:  
 
-
-
 Approach 1: Query Filter 
 
 Approach 2: Composite Key   StatusDate 将Status 和 Date组合成为一个新的Key   Create a hierarchy
@@ -665,15 +705,69 @@ access is evenly spread over the key-space
 
 
 
-### Database
+### Amazon Relational Database Service(Amazon RDS)
 
- 
+Video: 
+
+* [AWS re:Invent 2017: Deep Dive on Amazon Relational Database Service (RDS)](https://www.youtube.com/watch?v=TJxC-B9Q9tQ)
+
+What is Amazon RDS ?
+
+* Managed relational database service in the AWS cloud
+
+* multi-engine support
+
+* automated provisioning, patching, scaling, replicas, backup/restore, scalability, high availability
 
 
 
-### EBS
+Which instance type should I choose ?
 
-[Deep Dive on Amazon EBS](https://www.youtube.com/watch?v=wsMWANWNoqQ)
+* T2 Family
+  * Burstable instances
+  * Good for smaller or variable workloads
+* M3 / M4 Family
+  * General-purpose instances
+  * Good for running CPU intensive workloads
+* R3 / R4 Family
+  * Memory-optimized instances
+  * Good for query-intensive workloads or high connection counts
+
+
+
+When to Use Amazon RDS
+
+![AWS-RDS](.\screenshot\AWS-RDS.PNG)
+
+
+
+
+
+Amazon RDS Multi-AZ deployments provide enhanced availability and durability for RDS database (DB) instances, making them a natural fit for production database workloads.
+
+https://aws.amazon.com/rds/features/multi-az/
+
+
+
+### Amazon Aurora
+
+MySQL and PostgreSQL-compatible relational database built for the cloud. Performance and availability of commercial-grade databases at 1/10th the cost.
+
+
+
+### AWS Elastic Block Store (EBS)
+
+不和EC2 host 绑定
+
+Size
+
+Type 
+
+Configurations
+
+Video: 
+
+* [Deep Dive on Amazon EBS](https://www.youtube.com/watch?v=wsMWANWNoqQ)
 
 persistent storage: the storage is independent outside the life span of an EC2 instance.
 
@@ -681,39 +775,53 @@ Solid state drives (SSD) — Optimized for **transactional workloads** involving
 
 Hard disk drives (HDD) — Optimized for **large streaming workloads** where the dominant performance attribute is throughput.
 
+Snapshots: Incremental backups 可以根据Snapshots来直接恢复数据
+
 
 
 Select Volume
 
 ![EBS-Use-Case](./screenshot/EBS-Use-Case.png)
 
-Database: SSD
 
-* Typically hgh performane requirements
+
+SSD:
+
+* Optimized for transactional workloads involving **frequent read/write operations with small I/O size**, where the dominant performance attribute is IOPS.
+* 读写频率快 总量小
+
+
+
+HDD:
+
+* Optimized for **large streaming workloads** where the dominant performance attribute is throughput.
+* 读写频率慢 总量大
+
+
+
+**Database: SSD**
+
+* Typically high performance requirements
 
 * Mostly random I/O
 
 * Journal is sequential
 
-* Highly workload dependent
+* Highly workload dependent  
 
   
 
-Media: Throughput Optimized HDD
+**Media: Throughput Optimized HDD**
 
 * Typically high throughput requirements
 * Mostly sequential I/O
 * Sustained I/O
 
-
-
-File: Cold HDD
+**File: Cold HDD**
 
 * Typically low throughput requirements
 * Bursty workloads
 * Cost sensitive
-
- 
 
 Different Type
 
@@ -726,19 +834,86 @@ Different Type
 
 
 
-
-
-Burst: 
-
-
-
-
-
-### EFS
+### AWS Elastic File System(EFS)
 
 [Deep Dive on EFS](https://www.youtube.com/watch?v=4FQvJ2q6_oA)
 
+* Shared file systems: In **file storage**, multiple clients (such as users, applications, servers, and so on) can access data that is stored in shared file folder(multiple instances reading and writing simultaneously). Compared to block storage and object storage, file storage is ideal for use cases in which a large number of services and resources need to access the same data at the same time.
 
+* Regional resources
+
+* Automatically scale: As you add and remove files, Amazon EFS grows and shrinks automatically
+
+
+
+EFS lifecycle policy is only 90 days
+
+
+
+### Amazon Redshift
+
+[**Amazon Redshift**](https://aws.amazon.com/redshift) is a data warehousing service that you can use for big data analytics. It offers the ability to collect data from many sources and helps you to understand relationships and trends across your data.
+
+
+
+Enable Cross-Region Snapshots Copy in your Amazon Redshift Cluster.
+
+implement a disaster recovery plan for their systems to ensure business continuity
+
+### AWS Database Migration Service(AWS DMS)
+
+[**AWS Database Migration Service (AWS DMS)**](https://aws.amazon.com/dms/) enables you to migrate relational databases, nonrelational databases, and other types of data stores.
+
+
+
+### Additional Database Services
+
+* [**Amazon DocumentDB**](https://aws.amazon.com/documentdb) is a document database service that supports MongoDB workloads. (MongoDB is a document database program.)
+* [**Amazon Neptune**](https://aws.amazon.com/neptune) is a graph database service. You can use Amazon Neptune to build and run applications that work with highly connected datasets, such as recommendation engines, fraud detection, and knowledge graphs.
+* [**Amazon Quantum Ledger Database (Amazon QLDB)**](https://aws.amazon.com/qldb) is a ledger database service. You can use Amazon QLDB to review a complete history of all the changes that have been made to your application data. 数据不能被修改
+* [**Amazon ElastiCache**](https://aws.amazon.com/elasticache) is a service that adds caching layers on top of your databases to help improve the read times of common requests. It supports two types of data stores: Redis and Memcached.
+* [**Amazon DynamoDB Accelerator (DAX)**](https://aws.amazon.com/dynamodb/dax/) is an in-memory cache for DynamoDB. It helps improve response times from single-digit milliseconds to microseconds.
+
+
+
+### 不同Storage Service对比
+
+* Block Storage vs. Object Storage
+  * Block Storage: Block之间相关联 可以只进行局部修改
+  * Object Storage: 每一个Object之间都是独立的 必须进行整体统一的修改
+
+
+
+* EBS vs. S3 using complete objects or only occasional changes -> S3. complex read, write, change functions -> EBS 
+  * EBS 
+    * Block Storage, Up to 16TB, Solid state by default
+    * 适用场景: 单用户上传单一的大文件Video视频 然后进行在线剪辑 make a bunch of micro edits. 可以只更新局部的某一帧
+  * S3
+    * Unlimited storage, Individual objects up to 5 TB, Web enabled, Regionally distributed
+    * 适用场景: 多用户上传million级别图片 并且进行交互
+
+
+
+* EBS vs. EFS **EBS volumes store data within a single Availability Zone. Amazon EFS file systems store data across multiple Availability Zones**.
+* An EBS volume must be located in the same Availability Zone as the Amazon EC2 instance to which it is attached.
+
+* Data in an Amazon EFS file system can be accessed concurrently from all the Availability Zones in the Region where the file system is located.
+
+
+
+### Additional resources
+
+To learn more about the concepts that were explored in Module 5, review these resources.
+
+- [Cloud Storage on AWS](https://aws.amazon.com/products/storage)
+- [AWS Storage Blog](https://aws.amazon.com/blogs/storage/)
+- [Hands-On Tutorials: Storage](https://aws.amazon.com/getting-started/hands-on/?awsf.getting-started-category=category%23storage&awsf.getting-started-content-type=content-type%23hands-on)
+- [AWS Customer Stories: Storage](https://aws.amazon.com/solutions/case-studies/?customer-references-cards.sort-by=item.additionalFields.publishedDate&customer-references-cards.sort-order=desc&awsf.customer-references-location=*all&awsf.customer-references-segment=*all&awsf.customer-references-product=product%23vpc|product%23api-gateway|product%23cloudfront|product%23route53|product%23directconnect|product%23elb&awsf.customer-references-category=category%23storage)
+- [AWS Database Migration Service](https://aws.amazon.com/dms/)
+- [Databases on AWS](https://aws.amazon.com/products/databases)
+- [Category Deep Dive: Databases](https://aws.amazon.com/getting-started/deep-dive-databases/)
+- [AWS Database Blog](https://aws.amazon.com/blogs/database/)
+- [AWS Customer Stories: Databases](https://aws.amazon.com/solutions/case-studies/?customer-references-cards.sort-by=item.additionalFields.publishedDate&customer-references-cards.sort-order=desc&awsf.customer-references-location=*all&awsf.customer-references-segment=*all&awsf.customer-references-product=product%23vpc|product%23api-gateway|product%23cloudfront|product%23route53|product%23directconnect|product%23elb&awsf.customer-references-category=category%23databases)
 
 
 
@@ -746,19 +921,61 @@ Burst:
 
 
 
+Shared Responsibility Model
+
+![AWS-Shared-Responsibility-Model](.\screenshot\AWS-Shared-Responsibility-Model.PNG)
+
 ### Encryption Service
+
+
+
+in transit: as it travels to and from Amazon S3
+
+at rest: while it is stored on disks in Amazon S3 data centers
+
+
+
+Types of AWS Credentials
+
+* Username & Password
+* MFA
+* User Access Keys: Access keys are long-term credentials for an IAM user or the AWS account root user. You can use access keys to sign programmatic requests to the AWS CLI or AWS API (directly or using the AWS SDK).
+* Amazon EC2 Key Pairs: ssh 到ec2用的
+
+
+
+Auditing on AWS
+
+* Amazon S3 Server Access Logs: 存的是访问S3的request 信息
+* Elastic Load Balancer Access Logs: 存的是访问ELB的request 信息 client's IP address, latencies, server responses
+* Amazon CloudWatch Logs and Events: allow you to monitor and troubleshoot all the operating systems and applications that are running in your AWS environment.
+* VPC Flow Logs: audit connectivity and security issues. capture information about the IP traffic going into or out of your network interfaces and subnets.
+* CloudTrail logs: obtain a history of API calls to your account made via the console, AWS CLI, AWS SDKs or other AWS services
 
 
 
 KMS
 
+Key Hierarchy 
+
+
+
+[AWS Key Management Service](https://aws.amazon.com/kms/) (AWS KMS) is a managed service that allows you to create and control the keys used in data encryption.  If you want a managed service for creating and controlling encryption keys, but do not want or need to operate your own hardware security module (HSM), consider using AWS KMS
+
+
+
+"Key" Questions
+
+* Where are the keys stored ?
+* Where are the keys used ?
+* Who has access to the keys ?
+
+
+
 Video
 
 * [AWS re:Invent 2017: A Deep Dive into AWS Encryption Services](https://www.youtube.com/watch?v=gTZgxsCTfbk)
-
-
-
-What everyone means:
+* [Encryption and Key Management in AWS](https://www.youtube.com/watch?v=uhXalpNzPU4)
 
 
 
@@ -791,21 +1008,17 @@ Control Access
 
 
 
-Key 会有不同的level 
-
-
-
-
-
-Data-at-rest encryption 
-
-* Client-side encryption
-  * 
-* Server-side encryption
+Manage Access Key: https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html
 
 
 
 ### AWS Key Management Service
+
+Key 会有不同的level 
+
+对加密的key 继续进行一次加密 Wrap
+
+
 
 ### AWS Certificate Manager
 
@@ -815,33 +1028,31 @@ Data-at-rest encryption
 
 
 
-
-
-### IAM
-
-
+### **AWS Identity and Access Management (IAM)**
 
 Video:
 
 [Getting started with AWS identity](https://www.youtube.com/watch?v=Zvz-qYYhvMk)
 
-Reference:
-
-[深入理解IAM和访问控制-知乎陈天](https://www.zhihu.com/column/p/20330438)
+[**AWS Identity and Access Management (IAM)**](https://aws.amazon.com/iam/) enables you to manage access to AWS services and resources securely.  
 
 **名词解释**
 
-* Role: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加领过 
-* Group: a collection of IAM users, you can attach access control policies to a group
+* AWS account root user: Access and control any resource in the account
+* Principle of least privilege: A user is granted access only to what they need
+* Role: IAM User can assume a role to temporarily take on different permissions for a specific task. 针对于某一个具体资源或者服务使用的临时授权 更加灵活 No user/password
+* IAM Group: a collection of IAM users, you can attach access control policies to a group 对同一批User给予相同的permission 比如新招的10个收银员工
 * User: 在你的account之内的 可以用另外的账号密码进行登录
-* IAM Policy: a document that identifies one or more actions as they relate to one or more AWS resources. This policy document also determines the *effect* (could be **Allow /Deny**) permitted by the action on the resource.
+* IAM Policy: a JSON document that identifies one or more actions as they relate to one or more AWS resources. This policy document also determines the *effect* (could be **Allow /Deny**) permitted by the action on the resource.
 * Any action that's not explicity allowed by a policy will be denied. 
 
 
 
 IAM Roles
 
-![IAM-Roles](.\screenshot\IAM-Roles.PNG)IAM Identity live inside AWS accounts![IAM-AccountsInAWS](.\screenshot\IAM-AccountsInAWS.PNG)
+![IAM-Roles](.\screenshot\IAM-Roles.PNG)
+
+IAM Identity live inside AWS accounts![IAM-AccountsInAWS](.\screenshot\IAM-AccountsInAWS.PNG)
 
 AWS Account
 
@@ -870,6 +1081,14 @@ https://docs.aws.amazon.com/service-authorization/latest/reference/reference_pol
 
 **IAM Policy Example**
 
+Effect: Allow / Deny
+
+Action: Any AWS API call  e.g. `s3:ListBucket`
+
+Resource: Which AWS resource the API call is for
+
+
+
 ![IAM-Policy-EC2-example](.\screenshot\IAM-Policy-EC2-example.PNG)
 
 
@@ -894,17 +1113,25 @@ Same Policy Language
 
 ![IAM-Policy-Language](.\screenshot\IAM-Policy-Language.PNG)
 
-**重点 / 考点**
 
-IAM policy 和 Access Keys的区别
 
-Access Key 是给EC2用的, 作为一种认证信息来使用，不是用来加密的
+Amazon Inspector is a service that checks applications for security vulnerabilities and deviations from security best practices.
 
-STS: 发一个临时token来做认证 等价于IAM的Access Key
 
-Key pairs .pem file 用来登录EC2
 
-STS: Security Token Service
+Amazon GuardDuty: **A service that provides intelligent threat detection for your AWS infrastructure and resources**.
+
+AWS WAF: A service that lets you monitor network requests that come into your web applications
+
+
+
+### AWS Organization
+
+A central location to manage multiple AWS accounts
+
+
+
+In AWS Organizations, you can centrally control permissions for the accounts in your organization by using [**service control policies (SCPs)**](https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html). 
 
 
 
@@ -918,11 +1145,39 @@ SAML 2.0-Based ?
 
 SSL encryption: encrypt data when in-transit
 
+IAM policy 和 Access Keys的区别
+
+Access Key 是给EC2用的, 作为一种认证信息来使用，不是用来加密的
+
+STS: 发一个临时token来做认证 等价于IAM的Access Key
+
+Key pairs .pem file 用来登录EC2
+
+STS: Security Token Service
+
+
+
+## Analytics
+
+### Amazon Athena
+
+Amazon Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL. Athena is serverless, so there is no infrastructure to setup or manage, and you pay only for the queries you run.
+
+### Amazon EMR
+
+Amazon EMR is a web service that makes it easy to process vast amounts of data efficiently using **Apache Hadoop** and services offered by Amazon Web Services.
+
+### Amazon Kinesis
+
+Amazon Kinesis makes it easy to collect, process, and analyze **video and data streams** in real time.
+
+
+
 
 
 ## Compliance
 
-### CloudWatch
+### AWS Cloud Watch
 
 
 
@@ -966,36 +1221,21 @@ Archive
 
 
 
-
-
 **重点 / 考点**
 
-
-
-
-
-
-
-
-
-### CloudTrail
+### AWS CloudTrail
 
 
 
 Video:
 
 * [AWS re:Invent 2015 | (SEC318) AWS CloudTrail Deep Dive](https://www.youtube.com/watch?v=t0e-mz_I2OU)
-* 
 
 **名词解释**
 
 * API / non-API action
 * management events(control plane operations): operations that a principal executes(or attempts to execute) against an AWS resource.
 * data events: 
-
-
-
-
 
 recoding API calls
 
@@ -1012,8 +1252,6 @@ Use Cases
 * DevOps troubleshoot operational issues
 * IT Auditors can use log files as a compliance aid
 
-
-
 CloudTrail event can answer:
 
 * Who made the API call?
@@ -1023,10 +1261,6 @@ CloudTrail event can answer:
 * Where was the API call made from and made to?
 
 ![CloudTrail-Event](./screenshot/CloudTrail-Event.png)
-
-
-
-
 
 Encrypt CloudTrail log files using SSE-KMS 
 
@@ -1039,6 +1273,68 @@ Encrypt CloudTrail log files using SSE-KMS
 CloudTrail + CloudWatch + SNS 可以根据CloudTrail 来发送notification 邮件
 
 **重点 / 考点**
+
+
+
+### AWS Trusted Advisor
+
+[**AWS Trusted Advisor**](https://aws.amazon.com/premiumsupport/technology/trusted-advisor/) is a web service that inspects your AWS environment and provides real-time recommendations in accordance with AWS best practices.
+
+cost optimization / performance / security / fault tolerance / service limits
+
+![AWS-Trusted-Advisor](.\screenshot\AWS-Trusted-Advisor.jpg)
+
+
+
+### AWS Marketplace
+
+[**AWS Marketplace**](https://aws.amazon.com/marketplace) is a digital catalog that includes thousands of software listings from independent software vendors. You can use AWS Marketplace to find, test, and buy software that runs on AWS. 
+
+
+
+
+
+## Cloud Migration
+
+### AWS DataSync
+
+AWS DataSync is a data-transfer service that simplifies, automates, and accelerates moving and replicating data between on-premises storage systems and AWS storage services over the internet or AWS Direct Connect.
+
+
+
+ the [**AWS Cloud Adoption Framework (AWS CAF)**](https://d1.awsstatic.com/whitepapers/aws_cloud_adoption_framework.pdf) organizes guidance into six areas of focus, called **Perspectives**
+
+- The Governance Perspective helps you to identify and implement best practices for IT governance and support business processes with technology.
+- The Operations Perspective focuses on operating and recovering IT workloads to meet the requirements of your business stakeholders.
+- The Business Perspective helps you to move from a model that separates business and IT strategies into a business model that integrates IT strategy.
+- The Security Perspective of the AWS Cloud Adoption Framework also helps you to identify areas on non-compliance and plan ongoing security initiatives.
+
+
+
+### Snow Family
+
+直接用硬件物理导出然后运到AWS数据中心
+
+* [**AWS Snowcone**](https://aws.amazon.com/snowcone) is a small, rugged, and secure edge computing and data transfer device. It features 2 CPUs, 4 GB of memory, and 8 TB of usable storage.
+* Snowball
+  * **Snowball Edge Storage Optimized** devices are well suited for large-scale data migrations and recurring transfer workflows, in addition to local computing with higher capacity needs. 
+    * Storage: 80 TB of hard disk drive (HDD) capacity for block volumes and Amazon S3 compatible object storage, and 1 TB of SATA solid state drive (SSD) for block volumes. 
+    * Compute: 40 vCPUs, and 80 GiB of memory to support Amazon EC2 sbe1 instances (equivalent to C5).
+  * **Snowball Edge Compute Optimized** provides powerful computing resources for use cases such as machine learning, full motion video analysis, analytics, and local computing stacks.
+    * Storage: 42-TB usable HDD capacity for Amazon S3 compatible object storage or Amazon EBS compatible block volumes and 7.68 TB of usable NVMe SSD capacity for Amazon EBS compatible block volumes. 
+    * Compute: 52 vCPUs, 208 GiB of memory, and an optional NVIDIA Tesla V100 GPU.
+* [**AWS Snowmobile**](https://aws.amazon.com/snowmobile) is an exabyte-scale data transfer service used to move large amounts of data to AWS. You can transfer up to 100 petabytes of data per Snowmobile, a 45-foot long ruggedized shipping container, pulled by a semi trailer truck.
+
+## 
+
+When migrating applications to the cloud, six of the most common [migration strategies](https://aws.amazon.com/blogs/enterprise-strategy/6-strategies-for-migrating-applications-to-the-cloud/) that you can implement are:
+
+- Rehosting: moving an application to the cloud with little to no modifications to the application itself. It is also known as “lift and shift.”
+- Replatforming: involves selectively optimizing aspects of an application to achieve benefits in the cloud without changing the core architecture of the application. It is also known as “lift, tinker, and shift.”
+- Refactoring/re-architecting: involves changing how an application is architected and developed, typically by using cloud-native features
+- Repurchasing: involves replacing an existing application with a cloud-based version, such as software found in AWS Marketplace.
+- Retaining
+- Retiring
 
 
 
@@ -1107,6 +1403,41 @@ Kinesis Data Streams:
 
 
 
+
+
+## Pricing and Support
+
+Consolidated billing
+
+The consolidated billing feature of AWS Organizations enables you to receive a single bill for all AWS accounts in your organization.
+
+benefit:
+
+* track the combined costs of all the linked accounts in your organization
+* share bulk discount pricing, Savings Plans, and Reserved Instances across the accounts in your organization
+
+### AWS Budgets
+
+In [**AWS Budgets**](https://aws.amazon.com/aws-cost-management/aws-budgets), you can create budgets to plan your service usage, service costs, and instance reservations.
+
+![AWS-Budget](.\screenshot\AWS-Budget.jpg)
+
+
+
+
+
+### AWS Cost Explorer
+
+[**AWS Cost Explorer**](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) is a tool that enables you to visualize, understand, and manage your AWS costs and usage over time.
+
+
+
+![AWS-Cost-Explorer](.\screenshot\AWS-Cost-Explorer.png)
+
+AWS Support plans
+
+AWS Marketplace
+
 ## Training
 
 
@@ -1126,6 +1457,124 @@ Intuit on AWS: https://aws.amazon.com/solutions/case-studies/Intuit/
 
 
 ## 错题整理
+
+
+
+
+
+high availability: 
+
+![Q-service-high-availability](.\screenshot\Q-service-high-availability.PNG)
+
+fault-tolerance: 用户完全不受影响 
+
+![Q-service-fault-tolerant](.\screenshot\Q-service-fault-tolerant.PNG)
+
+
+
+RPO: 每天一张snapshot 所以损失了一天的数据 只能恢复到前一天的数据
+
+RTO: time to recover 用了10分钟重启
+
+![Q-RTO-RPO](.\screenshot\Q-RTO-RPO.PNG)
+
+
+
+EC2 定时launch
+
+![Q-EC2-schedule](.\screenshot\Q-EC2-schedule.PNG)
+
+
+
+
+
+Enhanced Monitoring 是RDS的feature  https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_Monitoring.OS.overview.html
+
+
+
+CloudWatch agent 可以收集internal-system level的metric: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html 包括cpu, disk, memory
+
+
+
+ **AWS ParallelCluster** is just an AWS-supported open-source cluster management tool that makes it easy for you to deploy and manage High-Performance Computing (HPC) clusters on AWS. ParallelCluster uses a simple text file to model and provision all the resources needed for your HPC applications in an automated and secure manner.
+
+**Amazon EMR** is a managed cluster platform that simplifies running big data frameworks, such as Apache Hadoop and Apache Spark, on AWS to process and analyze vast amounts of data.
+
+![AWS-EMR-Workflow](.\screenshot\AWS-EMR-Workflow.PNG)
+
+
+
+**AWS Config**
+
+**AWS Config** is a service that enables you to assess, audit, and evaluate the configurations of your AWS resources. Config continuously monitors and records your AWS resource configurations and allows you to automate the evaluation of recorded configurations against desired configurations. 
+
+![AWS-how-AWSconfig-works](.\screenshot\AWS-how-AWSconfig-works.png)
+
+You can only specify one **launch configuration** for an Auto Scaling group at a time, and you can’t modify a launch configuration after you’ve created it.
+
+可以通过EC2 的 metadata 来得到IP address
+
+![EC2-Metadata](.\screenshot\EC2-Metadata.PNG)
+
+
+
+DynamoDB 也是有Auto Scaling的 直接用 蒙的原则 如果有内置的AWS feature 直接拿来用就好
+
+
+
+Direct Internet 是私有网络 不是transport over the internet. 这里的internet 是特指public network
+
+
+
+Transfer data : 
+
+* AWS Global Accelerator is primarily used to optimize the path from your users to your applications which improves the performance of your TCP and UDP traffic.
+
+* Amazon S3 Transfer Acceleration can speed up content transfers to and from Amazon S3 by as much as 50-500% for long-distance transfer of larger objects.
+
+  
+
+***\*Cross-Region Replication\**** enables you to automatically copy S3 objects from one bucket to another bucket that is placed in a different AWS Region or within the same Region.
+
+
+
+Use VPC 是不要钱的
+
+EBS Volumes attached to stopped EC2 instances.  stopped ec2 instance是不要钱的 EBS是要钱的
+
+FTP用的是TCP协议 175.45.116.100/32 表示的是当前的IP a
+
+UDP
+
+
+
+
+
+
+
+### Test  Axioms
+
+Design Resilient Architecture
+
+* Expect "Single AZ" will never be a right answer
+* Using AWS managed services should always be preferred
+* Fault tolerant and high availability are not the same thing
+* Expect that everything will fail at some point and design accordingly
+
+
+
+Design Performant Architecture 
+
+* IAM roles are easier and safer than keys and passwords
+* Monitor metrics across the system
+* Automate responses to metrics where appropriate
+* Provide alerts for anomalous conditions
+
+Secure Application 
+
+
+
+Cost-Optimized Architecture
 
 
 
@@ -1221,9 +1670,7 @@ https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html
 
 \* Use a master key that you store within your application. 如果用的是自定义的key，可以不share给AWS,更加安全
 
-in transit: as it travels to and from Amazon S3
 
-at rest: while it is stored on disks in Amazon S3 data centers
 
 \* Bucket Policy:
 
