@@ -82,11 +82,11 @@ With **AWS CloudFormation**, you can treat your infrastructure as code. This mea
 
 * Reserved instance: 签订长期合约 1年/3年
 
-\* Standard
 
-\* Convertible: 可以更改instance type, OS, payment option
 
-\* AMI(Amazon Machine Image): reusable template include OS + additional installations
+* Convertible: 可以更改instance type, OS, payment option
+
+* AMI(Amazon Machine Image): reusable template include OS + additional installations
 
 * Running
 
@@ -705,6 +705,14 @@ access is evenly spread over the key-space
 
 
 
+DynamoDB hands on tutorial: 
+
+* Modeling Game Player Data with Amazon DynamoDB  https://aws.amazon.com/getting-started/hands-on/data-modeling-gaming-app-with-dynamodb/3/
+
+
+
+
+
 ### Amazon Relational Database Service(Amazon RDS)
 
 Video: 
@@ -1159,6 +1167,18 @@ STS: Security Token Service
 
 ## Analytics
 
+
+
+### AWS Glue
+
+AWS Glue is a fully managed ETL (extract, transform, and load) service that makes it simple and cost-effective to categorize your data, clean it, enrich it, and move it reliably between various data stores and data streams. 
+
+AWS Glue Concepts: https://docs.aws.amazon.com/glue/latest/dg/components-key-concepts.html
+
+
+
+
+
 ### Amazon Athena
 
 Amazon Athena is an interactive query service that makes it easy to analyze data in Amazon S3 using standard SQL. Athena is serverless, so there is no infrastructure to setup or manage, and you pay only for the queries you run.
@@ -1171,7 +1191,9 @@ Amazon EMR is a web service that makes it easy to process vast amounts of data e
 
 Amazon Kinesis makes it easy to collect, process, and analyze **video and data streams** in real time.
 
+### Amazon QuickSight
 
+Amazon QuickSight is a fast business analytics service to build visualizations, perform ad hoc analysis, and quickly get business insights from your data. 
 
 
 
@@ -1542,7 +1564,7 @@ Use VPC 是不要钱的
 
 EBS Volumes attached to stopped EC2 instances.  stopped ec2 instance是不要钱的 EBS是要钱的
 
-FTP用的是TCP协议 175.45.116.100/32 表示的是当前的IP a
+FTP用的是TCP协议 175.45.116.100/32 表示的是当前的IP address 
 
 UDP
 
