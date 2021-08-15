@@ -1,4 +1,4 @@
-## Reference
+## 资源列表
 
 Labs: http://csapp.cs.cmu.edu/3e/labs.html
 
@@ -82,14 +82,12 @@ Attack Lab:
 
   * Linking 链接 .o -> a.out 将已经提前编译好的库函数(e.g. `printf`) merge到``hello.o` 中生成完整的 **executable file**
 
-  ![image-20210425211249040](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210425211249040.png)
+  
 
 * OS提供的 三大抽象
   * Processes: Processor + Main memory + I/O devices
   * Virtual memory: Main memory + I/O devices
   * Files: I/O devices
-
-![image-20210425211159047](/Users/xiangyu/Library/Application Support/typora-user-images/image-20210425211159047.png)
 
 * Hardware Organization of a System
   * Buses: carry bytes of information back and forth between the components
@@ -158,6 +156,8 @@ long x = *xp;
 
 ### 3.5 Arithmetic and Logical Operations
 
+
+
 ### 3.6 Control
 
 
@@ -199,6 +199,101 @@ virtual address vs. physical address
 ### General Principles of Pipelining
 
 ### Pipelined Y86-64 Implementations
+
+
+
+## Chapter 8 Exceptional Control Flow
+
+### 8.1 Exceptions
+
+**基本概念**
+
+* *Exception*: an abrupt change in the control flow in response to some change in the processor's state. e.g. system call, signal, 
+* Control Flow: $a_0,a_1, ... a_n$​ 指令执行
+* exception table / page table / process table / file table ... 本质都是map structure 将一个整数/字符串 map到一个地址上
+
+**8.1 小结**
+
+本小节重点要理解异常控制流概念，相比于“正常控制流” 完全按照程序本来的逻辑顺序执行，当然程序中也会存在跳转jumps, calls, 但是这些跳转和flow的改变依然是在程序范围内，可以看做是没有任何外部中断。而Exception Flow 是一个外来的影响可能是系统本身或者是其他正在运行的程序。需要想到 这个Exceptional 为什么会存在? 因为我们需要和外界进行交互和反应，有I/O Network, Error。对程序有何影响？可能导致提前终止。 如何处理 单独写处理逻辑来处理
+
+异常的分类 
+
+* 从下到上  从Hardware到Software 不同层级来进行分类
+  * Hardware: 
+  * OS: system call (trap)
+  * Application: 
+
+* 从Exception本身的特点来分类
+
+![8.4-Classes-of-exceptions](..\screenshot\csapp\8.4-Classes-of-exceptions.png)
+
+关于异常的处理，需要认识到异常一定涉及到两个主体，发送方和接收方，在后面章节中可以看到这两个主体可以是 Process/ Process Group / Job / Kernel 
+
+![8.1-Anatomy-of-an-exception](..\screenshot\csapp\8.1-Anatomy-of-an-exception.PNG)
+
+
+
+### 8.2 Processes
+
+**基本概念**
+
+* *Context Switch*: Context: that state that the program  needs to run correctly. This state includes the program's code and data stored in memorym, its stack, the contents of its general-purpose registers, its program counter, environment variables, and the set of open file descriptors , Switch ->
+*  *Process*: an instance of a program in execution. 
+* *Concurrent Flow* vs. *Parallel Flow* 
+  * concurrent flow: if two flows overlap in time, even if they are running on the same processor
+  * parallel flow: 是concurrent flow的子集, 平行的 -> 存在两条不相交的线 -> 在两个cores/computers同时运行,也被称为running in parallel / parallel execution 
+* *User Mode* vs. *Kernel Mode*
+
+**8.2 小结** 
+
+进程提供的最重要的两个抽象: 
+
+* 独立的逻辑控制流
+* 私有的地址空间
+
+进程是人为创造出来的概念 方便我们更好的管理CPU 和 Memory, 整体划分 time slicing
+
+
+
+### 8.3 System Call Error Handling
+
+
+
+### 8.4 Process Control
+
+8.4 小结: 
+
+本小节的知识点是对于进程的操作，结合进程的生命周期的角度来看掌握内置的系统调用方法 Create -> Run -> Pause / Sleep / Interrupt / -> Terminate -> Reap 
+
+关于进程操作的方法
+
+```c
+
+pid_t getpid(void) 
+pid_t getppid(void)
+void exit(int status)
+pid_t fork(void)
+pid_t waitpid(pid_t pid, int *statusp, int options)
+pid wait(int *statusp)
+unsigned int sleep(unsigned int secs)    
+int pause(void)
+
+int execve(const char *filename, const char *argv[], const char *envp[]) 
+// Does not return if OK; returns -1 on error  
+    
+char *getenv(const char *name) 
+// returns: pointer to name if it exists, NULL if no match
+
+int setenv(const char *name, const char *newvalue, int overwrite)
+// returns: 0 on success, -1 on error
+    
+void unsetenv(const char *name)
+// returns: nothing
+```
+
+
+
+
 
 
 
