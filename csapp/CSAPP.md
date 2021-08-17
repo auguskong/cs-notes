@@ -257,9 +257,34 @@ virtual address vs. physical address
 
 ### 8.3 System Call Error Handling
 
+```c
+pid_t Fork(void) 
+{
+    pid_t pid;
+    
+    if ((pid = fork()) < 0)
+        unix_error("Fork error");
+    return pid;
+}
+```
+
+
+
+**8.3 小结**
+
+使用一个error-handling wrappers `Fork` 来进行错误处理，错误处理的常规操作是Unix system-level function会返回一个error变量，-1表示出错，0表示正常退出，同时使用一个`errno` 来标识出错原因
+
 
 
 ### 8.4 Process Control
+
+**基本概念**
+
+进程状态(state)
+
+* Running: executing on the CPU or waiting to be executed and will eventually be scheduled by the kernel
+* Stopped: the execution of the process is **suspended** and will not be scheduled. `SIGSTOP` `SIGTSTP` `SIGTTIN` `SIGTTOU` 信号可以让进程stop. `SIGCONT`可以让进程恢复运行
+* Terminated: The process is stopped permanently. 可能有三种原因导致: 1. receive a signal whose default action is to terminate the process 2. returning from the main routine 3. calling the `exit` function
 
 8.4 小结: 
 
@@ -270,12 +295,24 @@ virtual address vs. physical address
 ```c
 
 pid_t getpid(void) 
+// returns: PID of the caller
+    
 pid_t getppid(void)
+// returns: PID of the parent
+
 void exit(int status)
+
 pid_t fork(void)
+// returns: 0 to child, PID of child o parent, -1 on error
+    
 pid_t waitpid(pid_t pid, int *statusp, int options)
+// returns: PID of child if OK, 0(WNOHANG), or -1 on error
+    
 pid wait(int *statusp)
+// wait是waitpid的简易版本 默认pid是当前process 和 options变量   
+    
 unsigned int sleep(unsigned int secs)    
+    
 int pause(void)
 
 int execve(const char *filename, const char *argv[], const char *envp[]) 
@@ -289,11 +326,30 @@ int setenv(const char *name, const char *newvalue, int overwrite)
     
 void unsetenv(const char *name)
 // returns: nothing
+    
+
 ```
 
 
 
+### 8.5 Signal
 
+**基本概念**
 
-
-
+* Sending Signal
+  * `/bin/kill` Program  `linux > /bin/kill -9 15213`
+  * Keyboard / Terminal Command
+  * `kill` function  `int kill(pid_t pid, int sig)`
+    * pid > 0 send signal sig to process pid
+    * if pid = 0 send signal sig to every process in the process group of the calling process, including the calling process itself.
+    * if pid < 0 send signal sig to every process in process group |pid|
+* Receiving Signals
+  * each signal type has a default action
+    * process terminates
+    * process terminates and dumps core
+    * process stops until restarted by a SIGCONT signal
+    * process ignores the signal
+* Blocking / Unblocking Signal
+  * implicit blcoking: kernel blocks any pending signals of the type currently being processed by a handler
+  * explicit blocking: use `sigprocmask` function
+* Writing Signal Handlers
