@@ -336,6 +336,28 @@ void unsetenv(const char *name)
 
 **基本概念**
 
+* *signal*: a small message that notifies a process that an event of some type has occurred in the system. signals provide a mechanism for exposing the occurrence of kernel's exception to user processes.
+
+* pending bit vector: the kernel maintains the set of pending signals in the pending bit vector
+
+* blocked bit vector: set of blocked signals
+
+* 常见的Linux signals
+
+  * `SIGQUIT`: Quit from keyboard -> Terminate
+
+  * `SIGILL`: Illegal instruction -> Terminate
+
+  * `SIGKILL`: Kill program -> Terminate
+
+  * `SIGTERM`: Software termination signal -> Terminate
+
+  * `SIGCHLD`: A child process has stopped or terminated ->Ignore
+
+  * `SIGCONT`: Continue process if stopped
+
+    
+
 * Sending Signal
   * `/bin/kill` Program  `linux > /bin/kill -9 15213`
   * Keyboard / Terminal Command
@@ -353,3 +375,117 @@ void unsetenv(const char *name)
   * implicit blcoking: kernel blocks any pending signals of the type currently being processed by a handler
   * explicit blocking: use `sigprocmask` function
 * Writing Signal Handlers
+
+
+
+关于Signal操作的方法
+
+```c
+pid_t getpgrp(void); 
+// returns: process group ID of calling process
+
+int setpgid(pid_t pid, pid_t pgid)
+// change the process group of process pid to pgid. if pid is 0 -> 使用当前调用函数的PID if pgid is 0 -> 使用当前调用函数的process group ID
+// returns 0 on success, -1 on error
+    
+int kill(pid_t pid, int sig)
+// pid > 0 send signal sig to process pid
+// if pid = 0 send signal sig to every process in the process group of the calling process, including the calling process itself.
+// if pid < 0 send signal sig to every process in process group |pid|
+    
+sighandler_t signal(int signum, sighandler_t handler); 
+// 用来改变signum default action
+// returns: pointer to previous handler if OK, SIG_ERR on error(does not set errno)
+
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset);
+// 改变当前的blocked bit vector returns: 0 if OK, -1 on error
+// how有三个选项: SIG_BLOCK: 将set中的信号添加到blocked中(blocked=blocked | set) SIG_UNBLOCK: 从blocked中删除set中的信号 SIG_SETMASK: block = set 注意和SIG_BLOCK区分 这里是直接等价代换
+int sigemptyset(sigset_t *set)
+// 清空set中的signal returns: 0 if OK, -1 on error
+int fillset(sigset_t *set)
+// 将所有的signal 加到set中 returns: 0 if OK, -1 on error
+int sigaddset(sigset_t *set, int signum)
+// 将signal signum加入到set中 returns: 0 if OK, -1 on error
+int sigdelset(sigset_t *set, int signum)
+// 将signal signum从set中清除 returns: 0 if OK, -1 on error
+    
+int sigismember(sigset_t *set, int signum)
+// 判断一个signum是否在set中存在 returns 1 if member, 0 if not, -1 on error
+
+int sigsuspend(const sigset_t *mask)
+// temporarily replaces the current blocked set with mask, 并且等到接收到了一个能够启动handler或终止process的信号， 如果action是terminate, process直接terminate without returning from sigsuspend. 如果是启动handler, 会在handler执行结束后return, 并且回复之前blcoked set
+// 等价于 sigprocmask(SIG_BLOCK, &mask, &prev); pause(); sigprocmask(SIG_SETMASK, &prev, NULL); 
+// 目的在于消除potential race 在call sigprocmask之后但是call pasuse()之前有信号进入
+    
+    
+int sigaction(int signum, struct sigaction *act, struct sigaction *oldact); 
+// 让用户自定义signal-handling semantics 但是需要用sigaction太麻烦 直接Signal 包一下
+// returns 0 if OK, -1 on error
+Signal Wrapper 用来解决signal function 系统不一致 以及system calls 可能被中断的情况
+handler_t *Signal(int signum, handler_t *handler)
+{
+    struct sigaction action, old_action;
+    
+    action.sa_handler = handler;
+    sigemptyset(&action.sa_mask);
+    action.sa_flags = SA_RESTART;
+    
+    if (sigaction(signum, &action, &old_action) < 0)
+        unix_error("Signal error");
+    return (old_action.sa_handler);
+}
+```
+
+
+
+
+
+**示例代码**
+
+```c
+int main(int argc, char **argv)
+{
+    int pid;
+    sigset_t mask_all, prev_all;
+    
+    Sigfillset(&mask_all);
+    Signal(SIGCHLD, handler);
+    initjobs(); // Initialize the job list
+    
+    while (1) {
+        if ((pid = Fork()) == 0) {
+            Execve("/bin/date", argv, NULL);
+        }
+        Sigprocmask(SIG_BLOCK, &mask_all, &prev_all); // Parent process
+        addjob(pid); // Add the child to the job list
+        Sigprocmask(SIG_SETMASK, &prev_all, NULL);
+    }
+}
+
+
+// Fig 8-41 Waiting for a signal with a spin loop
+int main(int argc, char **argv)
+{
+    sigset_t mask, prev;
+    
+    Signal(SIGCHLD, sigchld_handler);
+    Signal(SIGINT, sigint_handler);
+    Sigemptyset(&mask);
+    Sigaddset(&mask, SIGCHLD); 
+    
+    while (1) {
+        Sigprocmask(SIG_VLOCK, &mask, &prev); // Block SIGCHLD
+        if (Fork() == 0)
+            exit(0);
+        
+        pid = 0;
+        Sigprocmask(SIG_SETMASK, &prev, NULL); // Unblock SIGCHLD
+        
+        // Wait for SIGCHLD to be received (wasteful)
+        while (!pid)
+            ;
+        printf(".");
+    }
+}
+```
+
