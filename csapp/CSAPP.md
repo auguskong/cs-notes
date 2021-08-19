@@ -286,6 +286,16 @@ pid_t Fork(void)
 * Stopped: the execution of the process is **suspended** and will not be scheduled. `SIGSTOP` `SIGTSTP` `SIGTTIN` `SIGTTOU` 信号可以让进程stop. `SIGCONT`可以让进程恢复运行
 * Terminated: The process is stopped permanently. 可能有三种原因导致: 1. receive a signal whose default action is to terminate the process 2. returning from the main routine 3. calling the `exit` function
 
+
+
+waitpid 和 wait 需要重点理解
+
+
+
+waitpid 可以检测子进程的退出状态 WIFEXITED WEXITSTATUS 
+
+程序不会按照特定的顺序回收子进程。
+
 8.4 小结: 
 
 本小节的知识点是对于进程的操作，结合进程的生命周期的角度来看掌握内置的系统调用方法 Create -> Run -> Pause / Sleep / Interrupt / -> Terminate -> Reap 
@@ -309,7 +319,7 @@ pid_t waitpid(pid_t pid, int *statusp, int options)
 // returns: PID of child if OK, 0(WNOHANG), or -1 on error
     
 pid wait(int *statusp)
-// wait是waitpid的简易版本 默认pid是当前process 和 options变量   
+// wait是waitpid的简易版本 默认pid是当前process 和 options变量 suspend当前的进程直到其中的一个children process terminates 可以用来和children process做synchronization
     
 unsigned int sleep(unsigned int secs)    
     
@@ -375,6 +385,8 @@ void unsetenv(const char *name)
   * implicit blcoking: kernel blocks any pending signals of the type currently being processed by a handler
   * explicit blocking: use `sigprocmask` function
 * Writing Signal Handlers
+* Explicitly Waiting for Signals
+  * example: when a linux shell creates a foreground job, it must wait for the job to terminate and be reaped by the `SIGCHLD` handler before accepting the next user command
 
 
 
@@ -443,6 +455,19 @@ handler_t *Signal(int signum, handler_t *handler)
 **示例代码**
 
 ```c
+// Zombie Example
+void fork7() {
+    if (fork() == 0) {
+      /* Child */
+      printf("Terminating Child, PID = %d\n", getpid());
+      exit(0);
+    } else {
+        printf("Running Parent, PID = %d\n", getpid());
+        while (1)
+            ; // Infinite loop
+    }
+}
+
 int main(int argc, char **argv)
 {
     int pid;
