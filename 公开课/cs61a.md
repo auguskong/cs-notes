@@ -1,3 +1,11 @@
+
+
+
+
+Website: https://inst.eecs.berkeley.edu/~cs61a/fa20/ 2020Fall
+
+# Lab
+
 ```pyt
 f = max() 
 
@@ -429,6 +437,46 @@ https://docs.python.org/3/faq/programming.html
 
 ## Lab 6
 
+
+
+### 知识点
+
+* **Nonlocal**: A variable is **nonlocal** to a frame if it is defined in the environment that the frame belongs to but not the frame itself, i.e. in its parent or ancestor frame.
+
+* **Mutability**
+
+  * *mutable*: an object is mutable if its state can change as code is executed
+
+  * *mutation*: process of changing an object's state 
+
+  * **==** vs. **is**
+
+    * **==** check if two expressions evaluate to **equal** values
+
+    * **is** check whether two expressions evaluate to the **same** values
+
+      ```python
+      >>> lst1 = [1, 2, 3, 4]
+      >>> lst2 = [1, 2, 3, 4]
+      >>> lst1 == lst2
+      True
+      >>> lst1 is lst2
+      False
+      
+      # when we mutate an object, we simply change its state, not its identity
+      >>> lst1 = [1, 2, 3, 4]
+      >>> lst2 = lst1
+      >>> lst1.append(5)
+      >>> lst2
+      [1, 2, 3, 4, 5]
+      >>> lst1 is lst2
+      True
+      ```
+
+      
+
+
+
 ### Q1: Make Adder Increasing
 
 如何确定adder被call了几次呢?  肯定是要用一个count变量来记录的
@@ -475,11 +523,190 @@ make_fib() 没有给出参数n 怎么声明nonlocal 变量？
 
 直接用两个变量来进行操作 不要用function call
 
+
+
+### Q3: List-Mutation
+
+Python Mutable Sequence Types Doc: https://docs.python.org/3/library/stdtypes.html#mutable-sequence-types
+
+```python
+>>> lst = [5, 6, 7, 8]
+>>> lst.append(6)
+? Nothing
+______
+
+>>> lst
+? [5, 6, 7, 8, 6]
+______
+
+>>> lst.insert(0, 9)
+>>> lst
+? [9, 5, 6, 7, 8, 6]
+______
+
+>>> x = lst.pop(2)
+>>> lst
+? [9, 5, 7, 8, 6]
+______
+
+>>> lst.remove(x)
+>>> lst
+? [9, 5, 7, 8]
+______
+
+>>> a, b = lst, lst[:]
+>>> a is lst
+? True
+______
+
+>>> b == lst
+? True
+______
+
+>>> b is lst
+? False
+______
+```
+
+
+
+
+
+### Q4: Insert Items
+
+
+
+
+
+## Lab 7 
+
+
+
+Topics:
+
+* Iterators
+  *  We define an iterable as an object on which calling the built-in function `iter` function returns an iterator
+* Generators
+* OOP
+
+
+
+WWPD
+
+### Q3
+
+```
+
+case 1
+>>> deneros_car = Car('Tesla', 'Model S')
+>>> deneros_car.model
+______
+
+>>> deneros_car.gas = 10
+>>> deneros_car.drive()
+______
+
+>>> deneros_car.drive()
+______
+
+>>> deneros_car.fill_gas()
+______
+
+>>> deneros_car.gas
+______
+
+>>> Car.gas
+______
+
+
+case 2
+>>> deneros_car = Car('Tesla', 'Model S')
+>>> deneros_car.wheels = 2
+>>> deneros_car.wheels
+______
+
+>>> Car.num_wheels
+______
+
+>>> deneros_car.drive()
+______
+
+>>> Car.drive()
+______
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: drive() missing 1 required positional argument: 'self'
+
+>>> Car.drive(deneros_car)
+______
+
+
+case 3
+>>> deneros_car = MonsterTruck('Monster', 'Batmobile')
+>>> deneros_car.drive()
+______
+
+Vroom! This Monster Truck is huge!
+'Monster Batmobile goes vroom!' 
+
+# print() 和 return 的输出结果不一样 print()的输出不需要加 ''
+
+>>> Car.drive(deneros_car)
+______
+
+'Monster Batmobile goes vroom!'
+
+>>> MonsterTruck.drive(deneros_car)
+______
+
+>>> Car.rev(deneros_car)
+
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: type object 'Car' has no attribute 'rev'
+
+rev(self) 只在MonsterTruck class当中定义了 
+```
+
+
+
+```python
+Traceback (most recent call last):
+  File "/mnt/d/repos/cs61a-2020fall/lab07/classes.py", line 89, in __init__
+    self.hand.append(self.deck[0])
+TypeError: 'Deck' object is not subscriptable
+```
+
+What does it mean if a Python object is "subscriptable" or not?
+
+https://stackoverflow.com/questions/216972/what-does-it-mean-if-a-python-object-is-subscriptable-or-not
+
+
+
+```py
+# built-ins that are subscriptable
+string:  "foobar"[3] == "b"
+tuple:   (1,2,3,4)[3] == 4
+list:    [1,2,3,4][3] == 4
+dict:    {"a":1, "b":2, "c":3}["c"] == 3
+```
+
+
+
+Deck class 中已经实现了一个`draw()` method
+
+
+
+用`pop`从list当中取出并删除元素
+
 # Project
 
+`()`: 得到generator
 
+`[]`: 得到一个新的List
 
-## cats
+## Project 1- cats
 
 ```python
 def about(topic):
@@ -520,4 +747,4 @@ Problem 4
 
 
 
-## 
+## Project 2 - 

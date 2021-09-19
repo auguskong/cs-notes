@@ -214,15 +214,16 @@ virtual address vs. physical address
 
 **8.1 小结**
 
-本小节重点要理解异常控制流概念，相比于“正常控制流” 完全按照程序本来的逻辑顺序执行，当然程序中也会存在跳转jumps, calls, 但是这些跳转和flow的改变依然是在程序范围内，可以看做是没有任何外部中断。而Exception Flow 是一个外来的影响可能是系统本身或者是其他正在运行的程序。需要想到 这个Exceptional 为什么会存在? 因为我们需要和外界进行交互和反应，有I/O Network, Error。对程序有何影响？可能导致提前终止。 如何处理 单独写处理逻辑来处理
+本小节重点要理解异常控制流概念，相比于“正常控制流” 完全按照程序本来的逻辑顺序执行，当然程序中也会存在跳转jumps, calls, 但是这些跳转和flow的改变依然是在程序范围内，可以看做是没有任何外部中断。而Exception Flow 是一个外来的影响可能是系统本身或者是其他正在运行的程序。需要想到 这个Exceptional 为什么会存在? 因为我们需要和外界进行交互和反应，有I/O Network, Error。对程序有何影响？可能导致提前终止。 如何处理单独写处理逻辑来处理
 
 异常的分类 
 
 * 从下到上  从Hardware到Software 不同层级来进行分类
-  * Hardware: 
+  * Hardware: exceptions
   * OS: system call (trap)
-  * Application: 
-
+  * Process: signals
+  * Application: nonlocal jumps
+  
 * 从Exception本身的特点来分类
 
 ![8.4-Classes-of-exceptions](..\screenshot\csapp\8.4-Classes-of-exceptions.png)
@@ -243,6 +244,7 @@ virtual address vs. physical address
   * concurrent flow: if two flows overlap in time, even if they are running on the same processor
   * parallel flow: 是concurrent flow的子集, 平行的 -> 存在两条不相交的线 -> 在两个cores/computers同时运行,也被称为running in parallel / parallel execution 
 * *User Mode* vs. *Kernel Mode*
+* Each time period that a process executes a portion of its flow is called a time slice. 
 
 **8.2 小结** 
 
@@ -253,7 +255,9 @@ virtual address vs. physical address
 
 进程是人为创造出来的概念 方便我们更好的管理CPU 和 Memory, 整体划分 time slicing
 
+Concurrent Flows
 
+Private Address Space
 
 ### 8.3 System Call Error Handling
 
@@ -290,11 +294,17 @@ pid_t Fork(void)
 
 waitpid 和 wait 需要重点理解
 
-
-
 waitpid 可以检测子进程的退出状态 WIFEXITED WEXITSTATUS 
 
 程序不会按照特定的顺序回收子进程。
+
+
+
+
+
+
+
+
 
 8.4 小结: 
 
@@ -448,10 +458,6 @@ handler_t *Signal(int signum, handler_t *handler)
 }
 ```
 
-
-
-
-
 **示例代码**
 
 ```c
@@ -513,4 +519,6 @@ int main(int argc, char **argv)
     }
 }
 ```
+
+
 
