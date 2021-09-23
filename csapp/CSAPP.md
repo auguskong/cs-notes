@@ -202,7 +202,7 @@ virtual address vs. physical address
 
 
 
-## Chapter 8 Exceptional Control Flow
+## Chapter 8 Exceptional Control Flow 
 
 ### 8.1 Exceptions
 
@@ -521,4 +521,68 @@ int main(int argc, char **argv)
 ```
 
 
+
+
+
+## Chapter 11: Network Programming
+
+Networking 
+
+基本的Model 是什么
+
+
+
+11.2 Networks:
+
+
+
+a layer of protocol software用来是不兼容的网络之间可以相互通信
+
+Naming scheme: 
+
+Delivery mechanism: incompatible ways of encoding bits on wires and of packaging these bits into frames. 使用packets + header + payload 的基本定义
+
+
+
+encapsulation is the key. 
+
+
+
+### 11.3 The Global IP Internet
+
+
+
+Internet clients and servers communicate using a mix of sockets interface functions and Unix I/O functions. 
+
+
+
+网络中的基本概念
+
+
+
+IP Addresses
+
+Internet Domain Names : 域名
+
+Internet Connections: A connection is point-to-point in the sense that it connects a pair fo processes. 
+
+## Chapter 12: Concurrent Programming
+
+
+
+如何实现Concurrent Programming 
+
+例子以及代码
+
+
+
+如何做到并发? 
+
+并发存在的问题? 
+
+并发的好处? 
+
+同时相应多个请求就是 I/O 多路复用? 
+
+event-driven 事件驱动
 

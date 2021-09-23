@@ -441,39 +441,41 @@ https://docs.python.org/3/faq/programming.html
 
 ### 知识点
 
-* **Nonlocal**: A variable is **nonlocal** to a frame if it is defined in the environment that the frame belongs to but not the frame itself, i.e. in its parent or ancestor frame.
+#### Nonlocal
 
-* **Mutability**
+*nonlocal*: A variable is **nonlocal** to a frame if it is defined in the environment that the frame belongs to but not the frame itself, i.e. in its parent or ancestor frame.
 
-  * *mutable*: an object is mutable if its state can change as code is executed
+#### Mutability
 
-  * *mutation*: process of changing an object's state 
+* *mutable*: an object is mutable if its state can change as code is executed
 
-  * **==** vs. **is**
+* *mutation*: process of changing an object's state 
 
-    * **==** check if two expressions evaluate to **equal** values
+* **==** vs. **is**
 
-    * **is** check whether two expressions evaluate to the **same** values
+  * **==** check if two expressions evaluate to **equal** values
 
-      ```python
-      >>> lst1 = [1, 2, 3, 4]
-      >>> lst2 = [1, 2, 3, 4]
-      >>> lst1 == lst2
-      True
-      >>> lst1 is lst2
-      False
-      
-      # when we mutate an object, we simply change its state, not its identity
-      >>> lst1 = [1, 2, 3, 4]
-      >>> lst2 = lst1
-      >>> lst1.append(5)
-      >>> lst2
-      [1, 2, 3, 4, 5]
-      >>> lst1 is lst2
-      True
-      ```
+  * **is** check whether two expressions evaluate to the **same** values
 
-      
+    ```python
+    >>> lst1 = [1, 2, 3, 4]
+    >>> lst2 = [1, 2, 3, 4]
+    >>> lst1 == lst2
+    True
+    >>> lst1 is lst2
+    False
+    
+    # when we mutate an object, we simply change its state, not its identity
+    >>> lst1 = [1, 2, 3, 4]
+    >>> lst2 = lst1
+    >>> lst1.append(5)
+    >>> lst2
+    [1, 2, 3, 4, 5]
+    >>> lst1 is lst2
+    True
+    ```
+
+    
 
 
 
@@ -574,24 +576,56 @@ ______
 
 ### Q4: Insert Items
 
+需要考虑insert 对于index的影响 用一个offset变量
+
+
+
+## Lab 7  
+
+
+
+### 知识点:
+
+#### Iterators
+
+*iterable*：any object that can be iterated through. 可以使用 `for elem in iterable` 遍历的`for` loops work on any object that is *iterable*. 
+
+*iterator* : call built-in function `iter` function returns an iterator. 
+
+ 
+
+*  We define an iterable as an object on which calling the built-in function `iter` function returns an iterator
+
+#### Generators
+
+a special type of iterator
+
+使用`yield` 关键字
+
+- A *generator function* has a `yield` statement and returns a *generator object*.
+- `yield from` will yield all values from an iterator or iterable.
+
+#### OOP
+
+* class 
+* instance
+* attribute/field
+* method: Methods are just like normal functions, except that they are tied to an instance or a class
+* constructor
+* `self` : `self` is the first parameter for many methods, when a method is called, `self` is bound to an instance of the class
 
 
 
 
-## Lab 7 
 
+Some questions: 
 
+* why iterator ?
+* real example 
 
-Topics:
+### Q1: Scale
 
-* Iterators
-  *  We define an iterable as an object on which calling the built-in function `iter` function returns an iterator
-* Generators
-* OOP
-
-
-
-WWPD
+### Q2: Hailstone
 
 ### Q3
 
@@ -700,6 +734,22 @@ Deck class 中已经实现了一个`draw()` method
 
 用`pop`从list当中取出并删除元素
 
+# Homework
+
+
+
+## hw1
+
+
+
+## hw2
+
+
+
+## hw3
+
+
+
 # Project
 
 `()`: 得到generator
@@ -707,6 +757,8 @@ Deck class 中已经实现了一个`draw()` method
 `[]`: 得到一个新的List
 
 ## Project 1- cats
+
+Project idea: 记录打字速度
 
 ```python
 def about(topic):
@@ -747,4 +799,190 @@ Problem 4
 
 
 
-## Project 2 - 
+## Project 2 - Ants
+
+Project idea: 山寨版植物大战僵尸 tower defense game. 
+
+练习目标: OOP 相关概念
+
+参考资料： https://composingprograms.com/pages/25-object-oriented-programming.html
+
+
+
+Debug
+
+```
+➜  ants git:(main) ✗ python3 ants_gui.py
+Could not load tkinter: No module named 'tkinter'
+Traceback (most recent call last):
+  File "ants_gui.py", line 22, in <module>
+    import graphics
+  File "/mnt/d/repos/cs61a-2020fall/ants/graphics.py", line 13, in <module>
+    class Canvas(object):
+  File "/mnt/d/repos/cs61a-2020fall/ants/graphics.py", line 91, in Canvas
+    def draw_image(self, pos, image_file=None, scale=1, anchor=tkinter.NW, behind=0):
+NameError: name 'tkinter' is not defined
+
+fix: 
+sudo apt-get update # 需要先update 否则可能下载镜像的地址不对
+sudo apt install python3-pip
+```
+
+```
+ants git:(main) ✗ pip3 install tkinter
+ERROR: Could not find a version that satisfies the requirement tkinter (from versions: none)
+ERROR: No matching distribution found for tkinter
+
+fix: 
+sudo apt-get install python3-tk
+```
+
+```
+ python3 ants_gui.py
+Traceback (most recent call last):
+  File "ants_gui.py", line 309, in <module>
+    def run(*args):
+  File "/mnt/d/repos/cs61a-2020fall/ants/ucb.py", line 26, in main
+    fn(*args) # Call the main function
+  File "ants_gui.py", line 312, in run
+    ants_strategies.start_with_strategy(args, AntsGUI().strategy)
+  File "/mnt/d/repos/cs61a-2020fall/ants/ants_strategies.py", line 42, in start_with_strategy
+    return GameState(strategy, beehive, ant_types(), layout, dimensions, food).simulate()
+  File "/mnt/d/repos/cs61a-2020fall/ants/ants.py", line 678, in simulate
+    self.strategy(self)                 # Ants deploy
+  File "ants_gui.py", line 181, in strategy
+    self.initialize_colony_graphics(gamestate)
+  File "ants_gui.py", line 90, in initialize_colony_graphics
+    self.canvas = graphics.Canvas()
+  File "/mnt/d/repos/cs61a-2020fall/ants/graphics.py", line 37, in __init__
+    self._tk = tk or tkinter.Tk()
+  File "/usr/lib/python3.8/tkinter/__init__.py", line 2270, in __init__
+    self.tk = _tkinter.create(screenName, baseName, className, interactive, wantobjects, useTk, sync, use)
+_tkinter.TclError: no display name and no $DISPLAY environment variable
+```
+
+
+
+https://stackoverflow.com/questions/49988054/tkinter-couldnt-connect-to-display-0
+
+直接在MS-DOS里面Run Program
+
+`D:\repos\cs61a-2020fall\ants> python .\ants_gui.py`
+
+
+
+Sublime Text 
+
+Code Folding shortcut: Edit -> Code Folding  Ctrl + K and Ctrl + 1/2/3/...
+
+
+
+### Problem 2
+
+Place的entrance非空的时候 需要进行赋值
+
+```python
+if exit:
+	exit.entrance = self
+```
+
+
+
+### Problem 3
+
+```python
+bee_place = self.place # 先用一个指针指向变量
+while bee_place and bee_place is not beehive:
+    if bee_place.bees:
+        return rANTdom_else_none(bee_place.bees)
+    bee_place = bee_place.entrance # 移动到和bee_place相邻的place
+    return None
+```
+
+
+
+### Problem 4
+
+min_range
+
+max_range
+
+
+
+需要用`self` 来指向instance本身
+
+不需要修改action 直接全都在父类中进行操作即可
+
+调用的时候注意使用 `self.min_range` 和 `self.max_range` 但是定义的时候是使用的class field ? 
+
+
+
+
+
+### Problem 5
+
+遍历 + 删除 可能会导致skip element
+
+通过提前复制list 来解决
+
+使用Ant class中的reduce_armor `Ant.reduce_armor(self, amount)`来进行damage 计算 然后 再加上Fire Ant本身的逻辑
+
+
+
+### Problem 6
+
+
+
+在Class当中Define 的method 也是self的? 
+
+状态变化了之后就会进入另一个branch了
+
+```python
+def action(self, gamestate):
+	if self.digesting == 0 and self.place.bees:
+		self.eat_bee(rANTdom_else_none(self.place.bees))
+	if self.digesting > 0: # 在eat_bee() 之后会直接减1 因为eat_bee()会将digesting更新为time_to_digest
+		self.digesting = self.digesting - 1
+
+ def action(self, gamestate):
+	if self.digesting == 0 and self.place.bees:
+		self.eat_bee(rANTdom_else_none(self.place.bees))
+	elif self.digesting > 0:
+		self.digesting = self.digesting - 1
+```
+
+
+
+
+
+### Problem 8
+
+多复用已经写好的method
+
+Place当中的`add_insect` 
+
+Insect class 当中的`reduce_armor`
+
+```python
+两种add的区别
+class Place:	
+	def add_insect(self, insect):
+    	insect.add_to(self)
+
+# 可以被override
+Place.add_insect(self, insect)
+
+insect.add_to(self)
+```
+
+
+
+### Extra Credit
+
+instance attribute  和 class attribute同时存在
+
+根据链表结构来遍历
+
+注意使用instance variable 来存list
+
+如果把List的初始化放在action 当中的话 每一次都会override 相当于没有办法记录之前的结果
